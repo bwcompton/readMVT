@@ -1,4 +1,4 @@
-'getzoom' <- function(zoom = 10, r = 0, c = 0, info = NULL) {
+'getzoom.times' <- function(zoom = 10, r = 0, c = 0, info = NULL) {
 
    # getzoom - read and display MVT streams at specified zoom; picks the center tile with optional offset
    # Arguments:
@@ -9,17 +9,26 @@
    # B. Compton, 14 Jun 2023
 
 
-
+   T <- t <- Sys.time()
    library(sf)
-   library(protolite)
-   protolite.patch()
+   cat(round(Sys.time() - t, 8), 'library(sf)\n'); t <- Sys.time()
    library(leaflet)
+   cat(round(Sys.time() - t, 8), 'library(leaflet)\n'); t <- Sys.time()
+   library(protolite)
+   cat(round(Sys.time() - t, 8), 'library(protolite)\n')
+   protolite.patch()
 
+   t <- Sys.time()
 
    if(is.null(info)) {
       xml <- readXML()
+      cat(round(Sys.time() - t, 8), 'readXML \n'); t <- Sys.time()
       info <- layer.info(xml, 'testbed:streamlines')
+      cat(round(Sys.time() - t, 8), 'layer.info\n')
    }
+
+   t <- Sys.time()
+
 
    url <- sub('\\{zoom\\}', zoom, info$url)
    q <- info$tiles[info$tiles$zoom == zoom,]
@@ -27,22 +36,18 @@
    url <- sub('\\{TileRow\\}', rc[1], url)
    url <- sub('\\{TileCol\\}', rc[2], url)
 
+   cat(round(Sys.time() - t, 8), 'prep\n'); t <- Sys.time()
+
    x <- read_mvt_sf(url, zxy = c(zoom, rc[2], rc[1]))
    x <- st_as_sf(x$streamlines)
 
+   cat(round(Sys.time() - t, 8), 'read_mvt_sf\n'); t <- Sys.time()
+
    leaflet(x) |>
       addTiles() |>
-      addPolylines()
+      addPolylines() |>
+      print()
+
+   cat(round(Sys.time() - t, 8), 'leaflet\n')
+   cat(round(Sys.time() - T, 8), 'total time\n')
 }
-
-
-
-
-########## THIS WORKS, READING FROM FIXED URL
-#url <- 'https://umassdsl.webgis1.com/geoserver/gwc/service/wmts/rest/testbed:streamlines/simple_streams/EPSG:900913/EPSG:900913:9/189/153?format=application/vnd.mapbox-vector-tile'
-#x <- read_mvt_sf(url, zxy = c(9, 153, 189))
-#x <- st_as_sf(x$streamlines)
-#leaflet(x) |>
-#   addTiles() |>
-#   addPolylines()
-##########
