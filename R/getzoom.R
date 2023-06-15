@@ -16,19 +16,22 @@
 
 
    if(is.null(info)) {
-      xml <- readXML()
+      xml <- read.XML()
       info <- layer.info(xml, 'testbed:streamlines')
    }
 
    url <- sub('\\{zoom\\}', zoom, info$url)
    q <- info$tiles[info$tiles$zoom == zoom,]
    rc <- c(q$rowmin, q$colmin) + round((c(q$rowmax, q$colmax) - c(q$rowmin, q$colmin)) / 2, digits = 0) + c(r, c)
-   url <- sub('\\{TileRow\\}', rc[1], url)
+ # rc <- c(1514, 1244)
+ #rc <- c(1510, 1225)       # my house
+print(rc)
+    url <- sub('\\{TileRow\\}', rc[1], url)
    url <- sub('\\{TileCol\\}', rc[2], url)
-
+#urlx<<-url;return()
    x <- read_mvt_sf(url, zxy = c(zoom, rc[2], rc[1]))
    x <- st_as_sf(x$streamlines)
-
+qqq<<-x
    leaflet(x) |>
       addTiles() |>
       addPolylines()

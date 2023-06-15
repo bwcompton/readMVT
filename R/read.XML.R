@@ -1,6 +1,6 @@
-'readXML' <- function(site = 'https://umassdsl.webgis1.com/geoserver') {
+'read.XML' <- function(site = 'https://umassdsl.webgis1.com/geoserver') {
 
-   # readXML - get capabilities XML from a GeoServer
+   # read.XML - get capabilities XML from a GeoServer
    # Arguments:
    #     site = base site name, through /geoserver
    # Result:
