@@ -1,10 +1,10 @@
-'protolite.patch' <- function() {
+'library.protolite' <- function() {
 
-   # mvt_sf_linestring patch
+   # load protolite library with mvt_sf_linestring patch
    # Awaiting fix to Protolite
 
 
-
+   library(protolite)
    mvt_sf_linestring <- function(mat){
 
       if (protolite:::all_equal(mat[, 3])) {

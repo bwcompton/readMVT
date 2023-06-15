@@ -14,9 +14,9 @@
    cat(round(Sys.time() - t, 8), 'library(sf)\n'); t <- Sys.time()
    library(leaflet)
    cat(round(Sys.time() - t, 8), 'library(leaflet)\n'); t <- Sys.time()
-   library(protolite)
+   library.protolite()
    cat(round(Sys.time() - t, 8), 'library(protolite)\n')
-   protolite.patch()
+
 
    t <- Sys.time()
 

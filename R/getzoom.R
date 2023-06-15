@@ -11,8 +11,7 @@
 
 
    library(sf)
-   library(protolite)
-   protolite.patch()
+   library.protolite()
    library(leaflet)
 
 
