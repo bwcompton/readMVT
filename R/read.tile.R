@@ -11,7 +11,7 @@
    #     col         tile column
    # Result:
    #     sf object
-   # B. Compton, 15 Jun 2023
+   # B. Compton, 15-16 Jun 2023
 
 
 
@@ -21,8 +21,7 @@
    url <- sub('\\{TileCol\\}', col, url)
 
    z <- read_mvt_sf(url, zxy = c(zoom, col, row))
-   #  z <- st_as_sf(z$streamlines)
-  # z <- z[names(z)]
+   if(length(z) == 0) return (NULL)
    z <- z[[1]]
    return(z)
 }
