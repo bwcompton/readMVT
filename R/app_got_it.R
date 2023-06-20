@@ -71,20 +71,26 @@ server <- function(input, output, session) {
 
       rect <- c(longlat[1] - 0.1, longlat[2] - 0.07, longlat[1] + 0.1, longlat[2] + 0.07)
 
-      m <- leafletProxy('map', session)
-      # if(zoom < trigger)
-      #    if(zoomed) {
-      #   #    hideGroup('vector') # clear streams
-      #       zoomed <- FALSE
-      #    }
-      # else {
-         zoomed <- TRUE
-         m <- addMarkers(m, lng = longlat[1], lat = longlat[2], popup = paste0('zoom = ', zoom))
+      m <<- leafletProxy('map', session)
+      ####      if(zoom >= trigger) {
+      if(zoom < trigger) {
+         print('* zoom < trigger *')
+         print(zoomed)
+         if(zoomed) {
+            hideGroup(m, 'vector') # clear streams
+            print('*** Trying to hide ***')
+            zoomed <<- FALSE
+         }
+      }
+      else {
+         zoomed <<- TRUE
+         showGroup(m, 'vector') # clear streams
+         m <<- addMarkers(m, lng = longlat[1], lat = longlat[2], popup = paste0('zoom = ', zoom))
          # rc <- get.tile(zoom, longlat[2], longlat[1])
          # x <- read.tile(info, zoom, rc[1], rc[2])
          # m <- addPolylines(m, data = x)
          # m
-  print(bounds)
+         print(bounds)
          nw <- get.tile(zoom2, bounds$north, bounds$west)
          se <- get.tile(zoom2, bounds$south, bounds$east)
          cat('/nzoom =', zoom, '  nw =', nw, '  se =', se, '\n')
@@ -103,7 +109,8 @@ server <- function(input, output, session) {
                   # print(sum(cached))
                   if(!is.null(x)) {
                      cat('r')
-                     m <- addPolylines(m, data = x, group = 'vector', opacity = 0.2, popup = format(x$STREAMLINE))
+                     #o <- ifelse(zoom > 13, 0.6, 0.1)
+                     m <<- addPolylines(m, data = x, group = 'vector', opacity = 0.2, popup = format(x$STREAMLINE))
                      m
                   }
                }
@@ -121,7 +128,7 @@ server <- function(input, output, session) {
          #       m <- addPolylines(m, data = x)
          #print(input$map_bounds)
          #m <- addRectangles(m, rect[1], rect[2], rect[3], rect[4], color = 'green', fillOpacity = 0.1)
-
+      }
       # m
    })
 }
