@@ -1,8 +1,9 @@
-# readMVT/app.test
+# readMVT/app_no_cache
 # messing around with loading MVT data on hitting a particular zoom level trigger
 # This works, but it's assigning global variables, which supposedly will conflict with other
 # Shiny sessions
-# B. Compton, 16-20 Jun 2023 (from getzoom-2)
+# THIS VERSION DOESN'T DO CACHEING
+# B. Compton, 21 Jun 2023 (from app-test.R)
 
 
 
@@ -28,15 +29,15 @@ x <- NULL
 xml <- read.XML()
 info <- layer.info(xml, 'testbed:streamlines')
 
-q <- info$tiles[info$tiles$zoom == zoom2,]
-cached <- matrix(0, q$rowmax - q$rowmin + 1, q$colmax - q$colmin + 1)    # status of cached tiles (0 = not cached, 2 = cached, 3 = cached and rendered)
-rownames(cached) <- as.character(q$rowmin:q$rowmax)
-colnames(cached) <- as.character(q$colmin:q$colmax)
-stream.cache <-  stream.cache <- as.list(rep.int(0, length(cached)))     # stores stream tiles cached in Shiny
-dim(stream.cache) <- c(dim(cache))
-rownames(stream.cache) <- rownames(cached)
-colnames(stream.cache) <- colnames(cached)
-culvert.cahce <- stream.cache                                                  # cached culverts, and so on
+# q <- info$tiles[info$tiles$zoom == zoom2,]
+# cached <- matrix(0, q$rowmax - q$rowmin + 1, q$colmax - q$colmin + 1)    # status of cached tiles (0 = not cached, 2 = cached, 3 = cached and rendered)
+# rownames(cached) <- as.character(q$rowmin:q$rowmax)
+# colnames(cached) <- as.character(q$colmin:q$colmax)
+# stream.cache <-  stream.cache <- as.list(rep.int(0, length(cached)))     # stores stream tiles cached in Shiny
+# dim(stream.cache) <- c(dim(cache))
+# rownames(stream.cache) <- rownames(cached)
+# colnames(stream.cache) <- colnames(cached)
+# culvert.cahce <- stream.cache                                                  # cached culverts, and so on
 zoomed <- FALSE
 
 
@@ -83,19 +84,19 @@ server <- function(input, output, session) {
 
          for(i in nw[1]:se[1])
             for(j in nw[2]:se[2]) {
-               if(cached[as.character(i), as.character(j)] == 0) {
+               #if(cached[as.character(i), as.character(j)] == 0) {
                   x <- read.tile(info, zoom2, i, j)
                   cat('R')
-                  stream.cache[[as.character(i), as.character(j)]] <<- x
-               }
-               if(cached[as.character(i), as.character(j)] <= 1) {
-                  cached[as.character(i), as.character(j)] <<- 2             # this may bleed into other users in production version - figure out scoping
+               #   stream.cache[[as.character(i), as.character(j)]] <<- x
+               #}
+              # if(cached[as.character(i), as.character(j)] <= 1) {
+              #    cached[as.character(i), as.character(j)] <<- 2             # this may bleed into other users in production version - figure out scoping
                   if(!is.null(x)) {
                      cat('r')
                      m <- addPolylines(m, data = x, group = 'vector', opacity = 0.2, popup = format(x$STREAMLINE))
                      m
                   }
-               }
+              # }
             }
       }
    })

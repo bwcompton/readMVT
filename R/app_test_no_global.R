@@ -4,7 +4,7 @@
 # Shiny sessions
 # B. Compton, 16-20 Jun 2023 (from getzoom-2)
 
-
+#FAILURE
 
 library(shiny)
 library(leaflet)
@@ -37,16 +37,19 @@ dim(stream.cache) <- c(dim(cache))
 rownames(stream.cache) <- rownames(cached)
 colnames(stream.cache) <- colnames(cached)
 culvert.cahce <- stream.cache                                                  # cached culverts, and so on
-zoomed <- FALSE
+
+
 
 
 ui <- fluidPage(
    sidebarPanel(
       textOutput("selected_var"),
    ),
-   mainPanel(
+   mainPanel({
       leafletOutput("map", height = '60vh')
-   )
+      input$spoo <- FALSE
+      input$zoomed <- FALSE
+   })
 )
 
 
@@ -58,7 +61,9 @@ server <- function(input, output, session) {
          osmGeocoder(email = 'bcompton@umass.edu')
    })
    observe({
-      if(!is.null(input$map_zoom)) zoom <- input$map_zoom
+#      if(is.null(input$zoomed)) input$zoomed <- FALSE
+
+#      if(!is.null(input$map_zoom)) zoom <- input$map_zoom
       longlat <- as.numeric(as.vector(input$map_center))
       bounds <- input$map_bounds
       output$selected_var <- renderText({
@@ -70,13 +75,13 @@ server <- function(input, output, session) {
 
       m <- leafletProxy('map', session)
       if(zoom < trigger) {
-         if(zoomed) {
+         if(input$zoomed) {
             hideGroup(m, 'vector') # clear streams
-            zoomed <<- FALSE
+            input$zoomed <- FALSE
          }
       }
       else {
-         zoomed <<- TRUE
+         input$zoomed <- TRUE
          showGroup(m, 'vector') # clear streams
          nw <- get.tile(zoom2, bounds$north, bounds$west)
          se <- get.tile(zoom2, bounds$south, bounds$east)
