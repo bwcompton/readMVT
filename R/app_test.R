@@ -33,7 +33,7 @@ cached <- matrix(0, q$rowmax - q$rowmin + 1, q$colmax - q$colmin + 1)    # statu
 rownames(cached) <- as.character(q$rowmin:q$rowmax)
 colnames(cached) <- as.character(q$colmin:q$colmax)
 stream.cache <-  stream.cache <- as.list(rep.int(0, length(cached)))     # stores stream tiles cached in Shiny
-dim(stream.cache) <- c(dim(cache))
+dim(stream.cache) <- dim(cached)
 rownames(stream.cache) <- rownames(cached)
 colnames(stream.cache) <- colnames(cached)
 culvert.cahce <- stream.cache                                                  # cached culverts, and so on
