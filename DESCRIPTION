@@ -1,11 +1,15 @@
 Package: readMVT
 Type: Package
-Title: What the Package Does (Title Case)
+Title: Read MapBox Vector Tiles from GeoServer with example calling code
 Version: 0.1.0
-Author: Who wrote it
-Maintainer: The package maintainer <yourself@somewhere.net>
-Description: More about what it does (maybe more than one line)
-    Use four spaces when indenting paragraphs within the Description.
-License: What license is it under?
+Author: Bradley W. Compton
+Maintainer: Bradley W. Compton <bcompton@umass.edu>
+Description: 
+License: GPL-3
 Encoding: UTF-8
 LazyData: true
+Imports:
+	leaflet,
+	shiny,
+	memoise,
+	leaflet.lagniappe

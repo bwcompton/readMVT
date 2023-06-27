@@ -1,8 +1,11 @@
 # readMVT/app.test
 # messing around with loading MVT data on hitting a particular zoom level trigger
 # This works, but it's assigning global variables, which supposedly will conflict with other
+# This version unnecessarily calls hideGroup repeatedly but it doesn't seem to take any time
+# and I've merged reading and drawing, as they both only need to happen once, so I don't need two values for cached
+# still problematic with bleed-over, I think
 # Shiny sessions
-# B. Compton, 16-20 Jun 2023 (from getzoom-2)
+# B. Compton, 16-22 Jun 2023 (from getzoom-2)
 
 
 
@@ -16,6 +19,7 @@ source('G:/R/readMVT/R/layer.info.R')
 source('G:/R/readMVT/R/read.XML.R')
 source('g:/r/readmvt/r/get.tile.R')
 source('g:/r/readmvt/r/read.tile.R')
+library.protolite()
 
 
 home <- c(-71.6995, 42.1349)
@@ -58,6 +62,7 @@ server <- function(input, output, session) {
          osmGeocoder(email = 'bcompton@umass.edu')
    })
    observe({
+      print(sum(cached))
       if(!is.null(input$map_zoom)) zoom <- input$map_zoom
       longlat <- as.numeric(as.vector(input$map_center))
       bounds <- input$map_bounds
@@ -70,11 +75,12 @@ server <- function(input, output, session) {
 
       m <- leafletProxy('map', session)
       if(zoom < trigger) {
-         if(zoomed) {
+      #   if(zoomed) {
             hideGroup(m, 'vector') # clear streams
+            print('hiding!')
             zoomed <<- FALSE
          }
-      }
+    #  }
       else {
          zoomed <<- TRUE
          showGroup(m, 'vector') # clear streams
@@ -87,8 +93,8 @@ server <- function(input, output, session) {
                   x <- read.tile(info, zoom2, i, j)
                   cat('R')
                   stream.cache[[as.character(i), as.character(j)]] <<- x
-               }
-               if(cached[as.character(i), as.character(j)] <= 1) {
+               #}
+              # if(cached[as.character(i), as.character(j)] <= 1) {
                   cached[as.character(i), as.character(j)] <<- 2             # this may bleed into other users in production version - figure out scoping
                   if(!is.null(x)) {
                      cat('r')

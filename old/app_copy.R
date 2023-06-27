@@ -1,21 +1,19 @@
-# readMVT/app.test
-# messing around with loading MVT data on hitting a particular zoom level trigger
-# This works, but it's assigning global variables, which supposedly will conflict with other
-# Shiny sessions
-# B. Compton, 16-20 Jun 2023 (from getzoom-2)
+# getzoom-3
+# messing around with loading MVT data on hitting a particular zoom levelrigger level
+# B. Compton, 16 Jun 2023 (from getzoom-2)
 
-FAILURE
+
 
 library(shiny)
 library(leaflet)
 library('leaflet.lagniappe')
-source('G:/R/readMVT/R/getzoom.times.R')
-source('G:/R/readMVT/R/getzoom.R')
-source('G:/R/readMVT/R/library.protolite.R')
-source('G:/R/readMVT/R/layer.info.R')
-source('G:/R/readMVT/R/read.XML.R')
-source('g:/r/readmvt/r/get.tile.R')
-source('g:/r/readmvt/r/read.tile.R')
+source('R/getzoom.times.R')
+source('R/getzoom.R')
+source('R/library.protolite.R')
+source('R/layer.info.R')
+source('R/read.XML.R')
+source('r/get.tile.R')
+source('r/read.tile.R')
 
 
 home <- c(-71.6995, 42.1349)
@@ -33,11 +31,10 @@ cached <- matrix(0, q$rowmax - q$rowmin + 1, q$colmax - q$colmin + 1)    # statu
 rownames(cached) <- as.character(q$rowmin:q$rowmax)
 colnames(cached) <- as.character(q$colmin:q$colmax)
 stream.cache <-  stream.cache <- as.list(rep.int(0, length(cached)))     # stores stream tiles cached in Shiny
-dim(stream.cache) <- dim(cached)
+dim(stream.cache) <- c(dim(cache))
 rownames(stream.cache) <- rownames(cached)
 colnames(stream.cache) <- colnames(cached)
 culvert.cahce <- stream.cache                                                  # cached culverts, and so on
-
 
 
 
@@ -45,9 +42,9 @@ ui <- fluidPage(
    sidebarPanel(
       textOutput("selected_var"),
    ),
-   mainPanel({
+   mainPanel(
       leafletOutput("map", height = '60vh')
-   })
+   )
 )
 
 
@@ -57,12 +54,11 @@ server <- function(input, output, session) {
          addProviderTiles(providers$CartoDB.Voyager) |>
          setView(lng = home[1], lat = home[2], zoom = zoom) |>
          osmGeocoder(email = 'bcompton@umass.edu')
-   })
-   observe({
-      if(is.null(session$test)) session$test <- runif(1)
-     # print(session$test)
 
-      #      if(!is.null(input$map_zoom)) zoom <- input$map_zoom
+   })
+
+   observe({
+      if(!is.null(input$map_zoom)) zoom <- input$map_zoom
       longlat <- as.numeric(as.vector(input$map_center))
       bounds <- input$map_bounds
       output$selected_var <- renderText({
@@ -72,19 +68,25 @@ server <- function(input, output, session) {
                 if(zoom >= trigger) '  TRIGGERED!')
       })
 
-      m <- leafletProxy('map', session)
-      if(zoom < trigger) {
-            hideGroup(m, 'vector') # clear streams
-           # input$zoomed <- FALSE
+      rect <- c(longlat[1] - 0.1, longlat[2] - 0.07, longlat[1] + 0.1, longlat[2] + 0.07)
 
-      }
-      else {
-         showGroup(m, 'vector') # clear streams
+      m <- leafletProxy('map', session)
+      if(zoom >= trigger) {
+         zoomed <- TRUE
+         m <- addMarkers(m, lng = longlat[1], lat = longlat[2], popup = paste0('zoom = ', zoom))
+         # rc <- get.tile(zoom, longlat[2], longlat[1])
+         # x <- read.tile(info, zoom, rc[1], rc[2])
+         # m <- addPolylines(m, data = x)
+         # m
+         #  print(bounds)
          nw <- get.tile(zoom2, bounds$north, bounds$west)
          se <- get.tile(zoom2, bounds$south, bounds$east)
+      #   cat('/nzoom =', zoom, '  nw =', nw, '  se =', se, '\n')
+         cat('/n')
 
          for(i in nw[1]:se[1])
             for(j in nw[2]:se[2]) {
+
                if(cached[as.character(i), as.character(j)] == 0) {
                   x <- read.tile(info, zoom2, i, j)
                   cat('R')
@@ -92,14 +94,29 @@ server <- function(input, output, session) {
                }
                if(cached[as.character(i), as.character(j)] <= 1) {
                   cached[as.character(i), as.character(j)] <<- 2             # this may bleed into other users in production version - figure out scoping
+                 # print(sum(cached))
                   if(!is.null(x)) {
                      cat('r')
-                     m <- addPolylines(m, data = x, group = 'vector', opacity = 0.2, popup = format(x$STREAMLINE))
+                     m <- addPolylines(m, data = x, opacity = 0.2, popup = format(x$STREAMLINE))
                      m
                   }
                }
+               # if(is.null(x))
+               #    x <- read.tile(info, zoom, i, j)
+               # else
+               #    x <- rbind(x, read.tile(info, zoom, i, j))
             }
+         #   m <- addPolylines(m, data = x)
+         #print(nw)
+         #print(se)
+         #print('---')
+         #print(rc)
+         #    x <- read.tile(info, zoom, rc[1], rc[2])
+         #       m <- addPolylines(m, data = x)
+         #print(input$map_bounds)
+         #m <- addRectangles(m, rect[1], rect[2], rect[3], rect[4], color = 'green', fillOpacity = 0.1)
       }
+      # m
    })
 }
 

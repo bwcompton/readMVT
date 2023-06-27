@@ -16,3 +16,4 @@
    z <- xml_ns_strip(read_xml(content(z, as = "text")))
    return(z)
 }
+

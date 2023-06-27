@@ -20,7 +20,10 @@
    url <- sub('\\{TileRow\\}', row, url)
    url <- sub('\\{TileCol\\}', col, url)
 
+#   cat('R')
+#   print(url)
    z <- read_mvt_sf(url, zxy = c(zoom, col, row))
+#s   Sys.sleep(0.5)
    if(length(z) == 0) return (NULL)
    z <- z[[1]]
    return(z)

@@ -1,0 +1,13 @@
+name: streamtest
+title: streamtest
+username:
+account: umassdsl
+server: shinyapps.io
+hostUrl: https://api.shinyapps.io/v1
+appId: 9374470
+bundleId: 7394900
+url: https://umassdsl.shinyapps.io/streamtest/
+when: 1687898465.87835
+lastSyncTime: 1687898465.87839
+asMultiple: FALSE
+asStatic: FALSE
