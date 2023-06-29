@@ -22,6 +22,7 @@
 
 #   cat('R')
 #   print(url)
+#   cat('col, row:', col, row, '\n')
    z <- read_mvt_sf(url, zxy = c(zoom, col, row))
 #s   Sys.sleep(0.5)
    if(length(z) == 0) return (NULL)

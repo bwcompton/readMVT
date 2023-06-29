@@ -1,6 +1,7 @@
 # readMVT/app_test_memoise.R
 # This version uses the memoise package for caching.
 # It includes new attempts to avoid redrawing, using session$userData
+# THIS WORKS!!
 # B. Compton, 27 Jun 2023 (from app_test.R)
 
 

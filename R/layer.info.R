@@ -8,17 +8,20 @@
    #     layer    name of the layer, e.g., testbed:streamlines
    #     crs      coordinate reference system. For Mapbox Vector Tiles, you'll want EPSG:900913
    # Results:
-   #     1. box: bounding box (x-min, y-min, x-max, y-max)
-   #     2. tiles: a n x 3 matrix of zoom level, rows, cols
-   #     3. url: constructed url, with {style} and {TileMatrixSet} replaced, and {TileMatrix} replaced with {zoom}
+   #     1. layer: name of layer (colon converted to underscore)
+   #     2. box: bounding box (x-min, y-min, x-max, y-max)
+   #     3. tiles: a n x 3 matrix of zoom level, rows, cols
+   #     4. url: constructed url, with {style} and {TileMatrixSet} replaced, and {TileMatrix} replaced with {zoom}
    #              leaves {zoom}, {TileRow}, and {TileCol} to be replaced on reads
-   # B. Compton, 12-14 Jun 2023
+   # B. Compton, 12-14 and 29 Jun 2023
 
 
 
    library(httr)
    library(xml2)
 
+   # layer name
+   l <- sub(':', '_', layer)
 
    # bounding box
    x <- xml_children((xml_find_first(xml, paste0("//Layer[ows:Identifier = '", layer, "']/ows:WGS84BoundingBox"))))
@@ -53,5 +56,5 @@
    url <- sub('\\{TileMatrix\\}', paste0(crs, ':{zoom}'), url)       # insert CRS for zoom, leaving {zoom} for later replacement
 
 
-   return(list(box = box, tiles = z, url = url))
+   return(list(layer = l, box = box, tiles = z, url = url))
 }
