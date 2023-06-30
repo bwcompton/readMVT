@@ -1,6 +1,6 @@
 'read.XML' <- function(site = 'https://umassdsl.webgis1.com/geoserver') {
 
-   # read.XML - get capabilities XML from a GeoServer
+   # read.XML - get capabilities XML from specified GeoServer
    # Arguments:
    #     site = base site name, through /geoserver
    # Result:
@@ -16,4 +16,3 @@
    z <- xml_ns_strip(read_xml(content(z, as = "text")))
    return(z)
 }
-

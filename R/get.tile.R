@@ -1,7 +1,6 @@
 'get.tile' <- function(zoom, lat, long) {
 
-   # get.tile
-   # given long and lat, find the correct MVT tile and return numeric row, col
+   # get.tile - given lat and long, find the correct Mapbox Vector Tile and return numeric row, col
    # Arguments:
    #     zoom        zoom level
    #     lat         latitude of target point
@@ -9,7 +8,7 @@
    # Result:
    #     rowcol      two element vector with row and column in MVT
    # Translated from Python and JavaScript, thanks to
-   #      https://stackoverflow.com/questions/29218920/how-to-find-out-map-tile-coordinates-from-latitude-and-longitude
+   #     https://stackoverflow.com/questions/29218920/how-to-find-out-map-tile-coordinates-from-latitude-and-longitude
    # B. Compton, 16 Jun 2023
 
 
