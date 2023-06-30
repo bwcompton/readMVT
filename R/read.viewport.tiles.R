@@ -14,6 +14,13 @@
    #     a memoise cache is used to cache read tiles, shared among users
    #     Note: calling function must execute read.tile.C <<- memoise(read.tile)  # global to share among users
    # B. Compton, 29-30 Jun 2023
+   #' @export
+   #' @import leaflet
+   #' @import shiny
+   #' @import httr
+   #' @import xml2
+   #' @import memoise
+   #' @import protolite
 
 
 
