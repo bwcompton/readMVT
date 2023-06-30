@@ -15,7 +15,7 @@
    #     Note: calling function must execute read.tile.C <<- memoise(read.tile)  # global to share among users
    # B. Compton, 29-30 Jun 2023
    #' @export
-
+   #' @import sf
 
 
 

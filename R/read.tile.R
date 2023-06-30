@@ -11,6 +11,7 @@
    # B. Compton, 15-16 Jun 2023
    #' @export
    #' @import protolite
+   #' @import sf
 
 
    library.protolite()     # hack until bug is fixed
