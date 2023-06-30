@@ -12,11 +12,12 @@
    #     4. url: constructed url, with {style} and {TileMatrixSet} replaced, and {TileMatrix} replaced with {zoom}
    #              leaves {zoom}, {TileRow}, and {TileCol} to be replaced on reads
    # B. Compton, 12-14 and 29 Jun 2023
+   #' @export
+   #' @import xml2
 
 
-
-   library(httr)
-   library(xml2)
+#   library(httr)
+#   library(xml2)
 
    # layer name
    l <- sub(':', '_', layer)

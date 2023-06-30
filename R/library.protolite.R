@@ -2,6 +2,9 @@
 
    # load protolite library with mvt_sf_linestring patch
    # Awaiting fix to Protolite
+   #' @export
+   #' @import protolite
+
 
 
    library(protolite)

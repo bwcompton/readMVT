@@ -10,6 +10,7 @@
    # Translated from Python and JavaScript, thanks to
    #     https://stackoverflow.com/questions/29218920/how-to-find-out-map-tile-coordinates-from-latitude-and-longitude
    # B. Compton, 16 Jun 2023
+   #' @export
 
 
 

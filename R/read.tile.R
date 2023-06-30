@@ -9,8 +9,11 @@
    # Result:
    #     sf object
    # B. Compton, 15-16 Jun 2023
+   #' @export
+   #' @import protolite
 
 
+   library.protolite()     # hack until bug is fixed
 
    url <- sub('\\{zoom\\}', zoom, info$url)
    url <- sub('\\{TileRow\\}', row, url)
