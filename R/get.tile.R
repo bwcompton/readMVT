@@ -1,16 +1,35 @@
 'get.tile' <- function(zoom, lat, long) {
 
-   # get.tile - given lat and long, find the correct Mapbox Vector Tile and return numeric row, col
-   # Arguments:
-   #     zoom        zoom level
-   #     lat         latitude of target point
-   #     long        longitude
-   # Result:
-   #     rowcol      two element vector with row and column in MVT
-   # Translated from Python and JavaScript, thanks to
-   #     https://stackoverflow.com/questions/29218920/how-to-find-out-map-tile-coordinates-from-latitude-and-longitude
-   # B. Compton, 16 Jun 2023
+   #' Gets Mapbox Vector Tile row and column
+   #'
+   #' Translates latitude and longitude at a given zoom level to row and column of a
+   #' Mapbox Vector Tile
+   #'
+   #' @param zoom    zoom level
+   #' @param lat     latitude of target point
+   #' @param long    longitude
+   #'
+   #' @return
+   #'     rowcol      two element vector with row and column in MVT
+   #'
+   #' @details
+   #'
+   #' Mapbox Vector Tiles use a common addressing scheme shared with other web mapping
+   #' services, such as Open Street Map Slippy Tiles. Tiles numbers are the same for any
+   #' data source based only on zoom level, latitude, and longitude. This function returns
+   #' the tile row and column.
+   #' Translated from Python and JavaScript, thanks to
+   #'     https://stackoverflow.com/questions/29218920/how-to-find-out-map-tile-coordinates-from-latitude-and-longitude
+   #'
    #' @export
+   #'
+   #' @examples
+   #' require readMVT
+   #' xml <- read.XML('https://umassdsl.webgis1.com/geoserver')
+   #' info <- layer.info(xml, 'testbed:streamlines')
+   #' get.tile(10, 48.0096, -88.7712)
+   #'
+   # B. Compton, 16 Jun 2023
 
 
 

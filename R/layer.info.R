@@ -1,23 +1,40 @@
 'layer.info' <- function(xml, layer, crs = 'EPSG:900913') {
 
-   # layer.info - read info for a Mapbox Vector Tile layer on a GeoServer
-   # Arguments:
-   #     xml      XML from getcapabilities. Use readXML to get this
-   #     layer    name of the layer, e.g., testbed:streamlines
-   #     crs      coordinate reference system. For Mapbox Vector Tiles, you'll want EPSG:900913 (= EPSG:3857)
-   # Results:
-   #     1. layer: name of layer (colon converted to underscore)
-   #     2. box: bounding box (x-min, y-min, x-max, y-max)
-   #     3. tiles: n x 5 matrix of zoom level, rowmin, rowmax, colmin, colmax
-   #     4. url: constructed url, with {style} and {TileMatrixSet} replaced, and {TileMatrix} replaced with {zoom}
-   #              leaves {zoom}, {TileRow}, and {TileCol} to be replaced on reads
-   # B. Compton, 12-14 and 29 Jun 2023
+   #' Read info for a Mapbox Vector Tile layer on a GeoServer
+   #'
+   #' Reads all necessary info for reading Mapbox Vector Tiles from a Geoserver
+   #'
+   #' @param xml     XML from getcapabilities. Use readXML to get this
+   #' @param layer   name of the layer, e.g., testbed:streamlines
+   #' @param crs     coordinate reference system. For Mapbox Vector Tiles, you'll want EPSG:900913 (= EPSG:3857)
+
+   #' @return
+   #' An MVT object, a four element list with:
+   #'     1. layer: name of layer (colon converted to underscore)
+   #'     2. box: bounding box (x-min, y-min, x-max, y-max)
+   #'     3. tiles: n x 5 matrix of zoom level, rowmin, rowmax, colmin, colmax
+   #'     4. url: constructed URL, with {style} and {TileMatrixSet} replaced, and {TileMatrix} replaced with {zoom}
+   #'              leaves {zoom}, {TileRow}, and {TileCol} to be replaced on reads
+   #'
+   #' @details
+   #' Pulls necessary information for reading Mapbox Vector Tiles from a GeoServer's capabilities XML. Builds
+   #' a template URL, with tags to be replaced by read.tile, when the target zoom level, row, and column are
+   #' known.
+   #'
+   #' @section Author:
+   #' Bradley W. Compton <bcompton@@umass.edu>
+   #'
    #' @export
    #' @import xml2
+   #'
+   #' @examples
+   #' require readMVT
+   #' xml <- read.XML('https://umassdsl.webgis1.com/geoserver')
+   #' info <- layer.info(xml, 'testbed:streamlines')
+   #'
+   # B. Compton, 12-14 and 29 Jun 2023
 
 
-#   library(httr)
-#   library(xml2)
 
    # layer name
    l <- sub(':', '_', layer)
