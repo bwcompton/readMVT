@@ -2,7 +2,6 @@
 
 export(get.tile)
 export(layer.info)
-export(library.protolite)
 export(read.XML)
 export(read.tile)
 export(read.viewport.tiles)

@@ -1,9 +1,9 @@
 'read.XML' <- function(site) {
 
-   #' Get capabilities XML from specified GeoServer
+   #' Get capabilities XML from a GeoServer
    #'
    #' This is a necessary first step before reading Mapbox Vector Tile data
-   #' from a GeoServer
+   #' from a GeoServer.
    #'
    #' @param site     base GeoServer site name, ending with /geoserver
    #' @return
@@ -13,11 +13,14 @@
    #' Each GeoServer has an XML file that describes all available data in
    #' excruciating detail. This function reads the XML from a GeoServer, setting
    #' you up to pull the key information about Mapbox Vector tiles using layer.info.
+   #'
    #' @section Author:
    #' Bradley W. Compton <bcompton@@umass.edu>
+   #'
    #' @export
    #' @importFrom httr GET content
    #' @import xml2
+   #'
    #' @examples
    #' require readMVT
    #' xml <- read.XML('https://umassdsl.webgis1.com/geoserver')
