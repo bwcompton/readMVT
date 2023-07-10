@@ -7,7 +7,6 @@
    #'
    #' @param zoom       zoom level
    #' @param lat,long   latitude and longitude of target point
-   #' @param long
    #'
    #' @return
    #'     rowcol      two element vector with row and column in MVT
@@ -24,7 +23,7 @@
    #' @export
    #'
    #' @examples
-   #' require readMVT
+   #' require(readMVT)
    #' xml <- read.XML('https://umassdsl.webgis1.com/geoserver')
    #' info <- layer.info(xml, 'testbed:streamlines')
    #' rc <- get.tile(10, 48.0096, -88.7712)

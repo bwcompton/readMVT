@@ -37,7 +37,7 @@ Bradley W. Compton <bcompton@umass.edu>
 }
 
 \examples{
-require readMVT
+require(readMVT)
 xml <- read.XML('https://umassdsl.webgis1.com/geoserver')
 info <- layer.info(xml, 'testbed:streamlines')
 

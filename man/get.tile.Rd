@@ -10,8 +10,6 @@ get.tile(zoom, lat, long)
 \item{zoom}{zoom level}
 
 \item{lat, long}{latitude and longitude of target point}
-
-\item{long}{}
 }
 \value{
 rowcol      two element vector with row and column in MVT
@@ -29,7 +27,7 @@ Translated from Python and JavaScript, thanks to
     \url{https://stackoverflow.com/questions/29218920/how-to-find-out-map-tile-coordinates-from-latitude-and-longitude}
 }
 \examples{
-require readMVT
+require(readMVT)
 xml <- read.XML('https://umassdsl.webgis1.com/geoserver')
 info <- layer.info(xml, 'testbed:streamlines')
 rc <- get.tile(10, 48.0096, -88.7712)

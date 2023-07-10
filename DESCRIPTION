@@ -23,3 +23,5 @@ Imports:
 	xml2,
 	protolite,
 	sf
+Suggests:
+	leaflet

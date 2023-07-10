@@ -3,10 +3,10 @@
    # load protolite library with mvt_sf_linestring patch
    # Awaiting fix to Protolite
    #' @import protolite
+   #' @importFrom utils assignInNamespace
 
 
 
-   library(protolite)
    mvt_sf_linestring <- function(mat){
 
       if (protolite:::all_equal(mat[, 3])) {

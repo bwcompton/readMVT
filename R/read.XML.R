@@ -22,7 +22,7 @@
    #' @import xml2
    #'
    #' @examples
-   #' require readMVT
+   #' require(readMVT)
    #' xml <- read.XML('https://umassdsl.webgis1.com/geoserver')
    #'
    # B. Compton, 12 Jun 2023
