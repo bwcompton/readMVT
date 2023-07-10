@@ -1,10 +1,19 @@
 Package: readMVT
 Type: Package
-Title: Read MapBox Vector Tiles from GeoServer
+Title: Read MapBox Vector Tiles from a GeoServer
 Version: 0.1.0
 Author: Bradley W. Compton
 Maintainer: Bradley W. Compton <bcompton@umass.edu>
-Description: 
+Description: Read tiled vector data in Mapbox Vector Tiles (MVT) from a 
+	GeoServer and return as 'sf' objects. This package is intended to 
+	be used with 'leaflet' under 'shiny' with multiple users, though it
+	is expected to work fine in other applications that are probably 
+	less demanding. Caches and shares served data among 'shiny' users 
+	on a session, and avoids unnecessary redrawing in 'leaflet'. This
+	approach supports displaying very large vector datasets in tiles
+	that follow zooming and panning.
+URL: https://github.com/bwcompton/readMVT
+BugReports: https://github.com/bwcompton/readMVT/issues
 License: GPL-3
 Encoding: UTF-8
 LazyData: true
