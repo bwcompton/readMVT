@@ -59,9 +59,10 @@ server <- function(input, output, session) {
       })
 
       if(isTRUE(input$map_zoom >= trigger)) {                                       # if above trigger zoom, draw features
+         m <- leafletProxy('map', session)
+
          nw <- get.tile(data.zoom, input$map_bounds$north, input$map_bounds$west)   # corners of viewport
          se <- get.tile(data.zoom, input$map_bounds$south, input$map_bounds$east)
-         m <- leafletProxy('map', session)
 
          x <- read.viewport.tiles(streamlines, nw, se, data.zoom, session$userData[[streamlines$layer]])
          session$userData[[streamlines$layer]] <- x$drawn
@@ -73,7 +74,7 @@ server <- function(input, output, session) {
          if(!is.null(x$tiles))
             m <- addCircleMarkers(m, data = x$tiles, group = 'vector', opacity = 1, color = 'orange', radius = 4)
 
-         groupOptions(m, 'vector', zoomLevels = zoom.levels)
+         return(groupOptions(m, 'vector', zoomLevels = zoom.levels))
       }
    })
 }

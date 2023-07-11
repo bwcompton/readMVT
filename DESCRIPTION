@@ -25,4 +25,7 @@ Imports:
 Remotes:
 	jeroen/protolite
 Suggests:
-	leaflet
+    knitr,
+    leaflet,
+    rmarkdown
+VignetteBuilder: knitr
