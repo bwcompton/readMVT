@@ -24,6 +24,12 @@ from a GeoServer and return as an sf object.
 This uses the URL in the MVT object created by layer.info to produce a URL for
 the specified row and column at the specified zoom level to fetch the MVT data
 from a GeoServer and return the data as an sf object.
+
+Note that this functions requires protolite >= 2.2.1. If it's not yet up on CRAN,
+you can get it with
+
+   \code{library(remotes)
+   install_github('jeroen/protolite')}
 }
 \section{Author}{
 

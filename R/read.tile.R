@@ -17,6 +17,11 @@
    #' the specified row and column at the specified zoom level to fetch the MVT data
    #' from a GeoServer and return the data as an sf object.
    #'
+   #' Note that this functions requires protolite >= 2.2.1. If it's not yet up on CRAN,
+   #' you can get it with
+   #'
+   #'    \code{remotes::install_github('jeroen/protolite')}
+   #'
    #' @section Author:
    #' Bradley W. Compton <bcompton@@umass.edu>
    #'
@@ -37,7 +42,7 @@
 
 
 
-   library.protolite()     # hack until bug is fixed
+#   library.protolite()     # hack until bug is fixed
 
    url <- sub('\\{zoom\\}', zoom, info$url)
    url <- sub('\\{TileRow\\}', row, url)

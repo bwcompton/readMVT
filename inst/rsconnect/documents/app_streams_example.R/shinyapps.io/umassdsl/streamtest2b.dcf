@@ -1,0 +1,13 @@
+name: streamtest2b
+title: streamtest2b
+username:
+account: umassdsl
+server: shinyapps.io
+hostUrl: https://api.shinyapps.io/v1
+appId: 9441417
+bundleId: 7445227
+url: https://umassdsl.shinyapps.io/streamtest2b/
+when: 1689097561.39088
+lastSyncTime: 1689097561.39092
+asMultiple: FALSE
+asStatic: FALSE

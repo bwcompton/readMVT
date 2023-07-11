@@ -1,8 +1,7 @@
 # readMVT/app_streams_example.R
 # Minimal example for readMVT package
 # To install readMVT:
-#    library(remotes)
-#    install_github('bwcompton/readMVT')
+#    remotes::install_github('bwcompton/readMVT')
 # B. Compton, 29 Jun-10 Jul 2023 (from app_test_further2.R)
 
 

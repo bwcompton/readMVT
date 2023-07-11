@@ -21,7 +21,7 @@ RoxygenNote: 7.2.3
 Imports:
 	httr,
 	xml2,
-	protolite,
+	protolite (>= 2.2.1),
 	sf
 Suggests:
 	leaflet
