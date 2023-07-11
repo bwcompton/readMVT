@@ -28,8 +28,7 @@ from a GeoServer and return the data as an sf object.
 Note that this functions requires protolite >= 2.2.1. If it's not yet up on CRAN,
 you can get it with
 
-   \code{library(remotes)
-   install_github('jeroen/protolite')}
+   \code{remotes::install_github('jeroen/protolite')}
 }
 \section{Author}{
 

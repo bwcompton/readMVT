@@ -5,9 +5,9 @@ account: umassdsl
 server: shinyapps.io
 hostUrl: https://api.shinyapps.io/v1
 appId: 9441417
-bundleId: 7445227
+bundleId: 7445280
 url: https://umassdsl.shinyapps.io/streamtest2b/
-when: 1689097561.39088
-lastSyncTime: 1689097561.39092
+when: 1689098805.81374
+lastSyncTime: 1689098805.81378
 asMultiple: FALSE
 asStatic: FALSE

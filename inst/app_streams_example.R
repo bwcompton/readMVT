@@ -21,7 +21,7 @@ zoom.levels = 14:22           # show vector data at these zoom levels
 
 read.tile.C <<- memoise(read.tile)                          # set up read.tile to cache vector tiles (global to share among users)
 
-xml <- read.XML('https://umassdsl.webgis1.com/geoserver')   # get capabilties of our GeoServer
+xml <- read.XML('https://umassdsl.webgis1.com/geoserver')   # get capabilities of our GeoServer
 streamlines <- layer.info(xml, 'testbed:streamlines')       # get info for stream linework
 culverts <- layer.info(xml, 'testbed:CL_crossings7')        # get info for crossing points
 
@@ -35,7 +35,7 @@ ui <- fluidPage(
              )
       ),
       column(10,
-             leafletOutput('map')
+             leafletOutput('map', height = '80vh')
       ))
 )
 
