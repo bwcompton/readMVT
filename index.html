@@ -82,7 +82,8 @@
 </h1></div>
 <!-- badges: start -->
 
-<p>This package supports reading vector data (points, lines, polygons) served as <a href="https://docs.mapbox.com/data/tilesets/guides/vector-tiles-introduction/" class="external-link">Mapbox Vector Tiles</a> (MVT) by a <a href="https://geoserver.org/" class="external-link">GeoServer</a>. It is designed to work with Leaflet under Shiny, but should work fine in simpler situations. It includes functions to query data sources and capabilities on a GeoServer, to obtain metadata on specific featuress, to translate latitude-longitude to MVT tile rows and columns, to read a tile, and to read all tiles in the current viewport.</p>
+<p>This package supports reading vector data (points, lines, polygons) served as <a href="https://docs.mapbox.com/data/tilesets/guides/vector-tiles-introduction/" class="external-link">Mapbox Vector Tiles</a> (MVT) by a <a href="https://geoserver.org/" class="external-link">GeoServer</a>. It is designed to work with Leaflet under Shiny, but should work fine in simpler situations. Vector data are returned as sf objects, so it’s possible to process vector data in R and return attributes as popups within Leaflet.</p>
+<p>readMVT includes functions to query data sources and capabilities on a GeoServer, to obtain metadata on specific featuress, to translate latitude-longitude to MVT tile rows and columns, to read a tile, and to read all tiles in the current viewport.</p>
 <div class="section level2">
 <h2 id="installation">Installation<a class="anchor" aria-label="anchor" href="#installation"></a>
 </h2>
