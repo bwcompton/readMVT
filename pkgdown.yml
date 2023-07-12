@@ -1,0 +1,10 @@
+pandoc: 2.19.2
+pkgdown: 2.0.7
+pkgdown_sha: ~
+articles:
+  shiny-example: shiny-example.html
+last_built: 2023-07-12T17:08Z
+urls:
+  reference: https://bwcompton.github.io/readMVT/reference
+  article: https://bwcompton.github.io/readMVT/articles
+
