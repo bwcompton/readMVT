@@ -1,6 +1,6 @@
 'get.tile' <- function(zoom, lat, long) {
 
-   #' Gets Mapbox Vector Tile row and column
+   #' Get Mapbox Vector Tile row and column
    #'
    #' Translates latitude and longitude at a given zoom level to row and column of a
    #' Mapbox Vector Tile.

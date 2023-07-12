@@ -20,15 +20,15 @@ knitr::opts_chunk$set(
 
 ### Introduction
 
-Although Leaflet can display very large image or raster data seamlessly with little effort, out of the box, it is far more limited in displaying vector data. The built-in methods require that your datasets be small enough to fit in the client's browser memory, and datasets of more than a very few thousand points are prohibitively slow to load.
+Although Leaflet for R can display very large image or raster data seamlessly with little effort it is far more limited in displaying vector data. The built-in methods require that your datasets be small enough to fit in the client's browser memory, and datasets of more than a very few thousand points are prohibitively slow to load.
 
-One nice approach to displaying vector data is via [Mapbox Vector Tiles](https://docs.mapbox.com/data/tilesets/guides/vector-tiles-introduction/) (MVT) served by a [GeoServer](https://geoserver.org/). Tiling is done transparently on the GeoServer, so data prep doesn't require a lot of effort. The readMVT package facilitates finding, loading, and displaying MVTs in Leaflet. It is intended to be run under Shiny, but can be used in simpler situations too.
+One nice approach to displaying vector data is via [Mapbox Vector Tiles](https://docs.mapbox.com/data/tilesets/guides/vector-tiles-introduction/) (MVT) served by a [GeoServer](https://geoserver.org/). Tiling is done transparently on the GeoServer, so data prep doesn't require a lot of effort. The readMVT package facilitates fetching and displaying MVTs in Leaflet. It is intended to be run under Shiny, but can be used in simpler situations too.
 
 This example displays vector stream data and road-stream crossings for Massachusetts, USA. It doesn't display the vector data until the user has zoomed to a specified level, for two reasons. First, there's no value in seeing points representing some 30,000 culverts and bridges when viewing the entire state. And second, loading large tiles at lower zoom levels would be prohibitively slow. When the user reaches the trigger zoom level, streams and crossings are displayed. They are continually loaded as the user zooms and pans above the trigger zoom. When the user zooms below the trigger level, the vector data are dropped from the display.
 
-To speed things up considerably, data are cached at two levels. First, we use the package *memoise* to cache tiles as they are fetched from the GeoServer. If there are multiple client browsers under the same R session, this cache is shared, so the same tile is never fetched from the GeoServer twice by the same R session. Second, Leaflet internally caches data drawn by the add\* functions (here, addPolylines and addCircleMarkers). We track (by user, not session) which tiles have been drawn so they don't need to be redrawn for a user.
+To speed things up considerably, data are cached at two levels. First, we use the package *memoise* to cache tiles as they are fetched from the GeoServer. If there are multiple client browsers under the same R session on a Shiny server, this cache is shared among users, so the same tile is never fetched from the GeoServer twice by the same R session. Second, Leaflet internally caches data drawn by the add\* functions (here, addPolylines and addCircleMarkers). We track (by user, not session) which tiles have been drawn so they don't need to be redrawn for a user.
 
-If you want to try running this example, we've provided it in one big chunk at the bottom, all ready to be copied and pasted .
+If you want to try running this example, we've provided it in one big chunk at the bottom, all ready to be copied and pasted into a script.
 
 ### Setup
 
@@ -48,31 +48,31 @@ home <- c(-71.6995, 42.1349)  # center of Massachusetts
 zoom <- 8                     # starting zoom level (shows all of Massachusetts)
 ```
 
-These three variables have to do with zoom levels. MVTs are simplified at lower zoom levels. As we've chosen not to display vector data at lower zooms, we pick a fixed zoom to simplify caching and reduce fetching redundant data. At zoom level 14, data are not simplified, so that seems like a good choice.
+The next three variables have to do with zoom levels. MVTs are simplified at lower zoom levels. As we've chosen not to display vector data at lower zooms, we pick a fixed zoom to simplify caching and reduce fetching redundant data. At zoom level 14, data are not simplified, so that seems like a good choice.
 
 ```{r datazoom}
-data.zoom <- 14               # all MVT tiles are read at this zoom level to simplify caching
+data.zoom <- 14   # all MVT tiles are read at this zoom level to simplify caching
 ```
 
 Our trigger level is the zoom level to start showing vector data.
 
 ```{r trigger}
-trigger <- 14                 # show vector data when zoomed in this far or more
+trigger <- 14     # show vector data when zoomed in this far or more
 ```
 
 This variable tells Leaflet the zoom levels at which to display the vector data.
 
 ```{r zoomlevels}         
-zoom.levels = 14:22           # show vector data at these zoom levels
+zoom.levels = 14:22    # show vector data at these zoom levels
 ```
 
-This line sets up the memoise cache for fetched MVTs. You can omit this, but that seems like a bad idea for any real-world application.
+This line sets up the memoise cache for fetched MVTs. You can omit this to skip caching, but that seems like a bad idea for any real-world application.
 
 ```{r memoise}
 read.tile.C <<- memoise(read.tile)  # set up read.tile to cache vector tiles (global to share among users)
 ```
 
-Finally, we can use functions from readMVT. read.XML fetches the GeoServer's "capabilities" file, an XML with information on all data on the GeoServer. Then, for each feature we will fetch, layer.info extracts an MVT object from the XML.
+Finally, we can use functions from readMVT. read.XML fetches the GeoServer's "capabilities" file, an XML with information on all data on the GeoServer. Then, for each feature we will fetch, layer.info extracts an MVT object from the XML. Here, we get layer info for stream linework and crossing (culverts and bridges) points.
 
 ```{r xml}         
 xml <- read.XML('https://umassdsl.webgis1.com/geoserver')   # get capabilities of our GeoServer
@@ -80,7 +80,7 @@ streamlines <- layer.info(xml, 'testbed:streamlines')       # get info for strea
 culverts <- layer.info(xml, 'testbed:CL_crossings7')        # get info for crossing points
 ```
 
-Here's the MVT object for streamlines. It includes the layer name (*layer*), the bounding box (*box*), the tile boundaries at each zoom level (*tiles*), and a template URL that specifies the tile to fetch, which unresolved information (zoom, row, and column) enclosed in braces. In normal use of readMVT, you don't need to worry about any of this.
+Here's the MVT object for streamlines. It includes the layer name (*layer*), the bounding box (*box*), the tile boundaries at each zoom level (*tiles*), and a template URL that specifies the tile to fetch, which unresolved information (zoom, row, and column) enclosed in braces. In normal use of readMVT, you don't need to worry about these details--you just have to get the layer.info and pass it to read.tile or read.viewport.tiles.
 
 ```{r streamlines}
 > streamlines
@@ -113,7 +113,7 @@ $url
 
 ### User interface
 
-Here's a simple Shiny user interface. We're making a sidebar on the left to display the zoom level.
+Here's a simple Shiny user interface. We make a sidebar on the left to display the zoom level.
 
 ```{r ui}         
 ui <- fluidPage(
@@ -159,7 +159,7 @@ observe({
    })
 ```
 
-If we're below the trigger, we're done--the basemap will be displayed, but none of the vector data. If we're zoomed above (or equal to) the trigger, we'll read the vector tiles and render them. We use leafletProxy to modify the current display so there's no unnecessary (and ugly) redrawing.
+If we're zoomed out below the trigger zoom, we're done--the basemap will be displayed, but none of the vector data. If we're zoomed above (or equal to) the trigger, we'll read the vector tiles and render them. We use leafletProxy to modify the current display so there's no unnecessary (and ugly) redrawing.
 
 ```{r if}
 if(isTRUE(input$map_zoom >= trigger)) {   # if above trigger zoom, draw features
@@ -182,7 +182,7 @@ if(!is.null(x$tiles))
    m <- addPolylines(m, data = x$tiles, group = 'vector', opacity = 0.4, color = 'cornflowerblue', weight = 3)
 ```
 
-We do the same thing for culverts. Note that we could pull culverts into a separate if clause with a different trigger if we wanted to.
+We do the same thing for culverts. Note that we could move culverts into a separate if\-clause with a different trigger if we wanted to.
 
 ```{r drawculverts}
 x <- read.viewport.tiles(culverts, nw, se, data.zoom, session$userData[[culverts$layer]])
@@ -191,7 +191,7 @@ if(!is.null(x$tiles))
    m <- addCircleMarkers(m, data = x$tiles, group = 'vector', opacity = 1, color = 'orange', radius = 4)
 ```
 
-The call to groupOptions displays all previously-rendered vector data at the selected zoom levels. Without this, zooming out would show streams and culverts for tiles we've visited, but not other visible tiles. By hiding the vector data, they smoothly vanish as we zoom out. The Leaflet map is returned and rendered as the observe finishes.
+The call to groupOptions displays all previously-rendered vector data at the selected zoom levels. Without this, zooming out would show streams and culverts for tiles we've visited, but not other visible tiles. That would be ugly. By hiding the vector data, they smoothly vanish as we zoom out. The Leaflet map is returned and rendered as the observe finishes.
 
 ```{r finish}         
          return(groupOptions(m, 'vector', zoomLevels = zoom.levels))
@@ -204,7 +204,7 @@ shinyApp(ui, server)
 
 ## Example code, all in one place
 
-If you're using RStudio, you should be able to install the named packages, copy this code, paste it into a script window, and click "Run App."
+If you're using RStudio, you should be able to install the named packages, copy this code, paste it into a script window, save it, and click "Run App."
 
 ```{r wholething} 
 library(readMVT)
