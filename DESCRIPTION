@@ -12,7 +12,7 @@ Description: Read tiled vector data in Mapbox Vector Tiles (MVT) from a
 	on a session, and avoids unnecessary redrawing in 'leaflet'. This
 	approach supports displaying very large vector datasets in tiles
 	that follow zooming and panning.
-URL: https://github.com/bwcompton/readMVT
+URL: https://github.com/bwcompton/readMVT, https://bwcompton.github.io/readMVT/
 BugReports: https://github.com/bwcompton/readMVT/issues
 License: GPL-3
 Encoding: UTF-8

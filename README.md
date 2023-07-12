@@ -5,22 +5,22 @@
 [![R-CMD-check](https://github.com/bwcompton/readMVT/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/bwcompton/readMVT/actions/workflows/R-CMD-check.yaml)
 <!-- badges: end -->
 
-The goal of readMVT is to ...
+This package supports reading vector data (points, lines, polygons) served as [Mapbox Vector Tiles](https://docs.mapbox.com/data/tilesets/guides/vector-tiles-introduction/) (MVT) by a 
+[GeoServer](https://geoserver.org/). It is designed to work with Leaflet under Shiny, but should
+work fine in simpler situations. It includes functions to query data sources and capabilities on 
+a GeoServer, to obtain metadata on specific featuress, to translate latitude-longitude to MVT
+tile rows and columns, to read a tile, and to read all tiles in the current viewport.
 
 ## Installation
 
 You can install the development version of readMVT from [GitHub](https://github.com/) with:
 
 ``` r
-# install.packages("devtools")
-devtools::install_github("bwcompton/readMVT")
+if(!require('remotes'))
+  install.packages('remotes') 
+remotes::install_github('bwcompton/readMVT')
 ```
 
 ## Example
 
-This is a basic example which shows you how to solve a common problem:
-
-``` r
-library(readMVT)
-## basic example code
-```
+For a detailed example, see `vignette('shiny-example')`.
