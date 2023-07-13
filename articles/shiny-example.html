@@ -105,14 +105,15 @@ continually loaded as the user zooms and pans above the trigger zoom.
 When the user zooms below the trigger level, the vector data are dropped
 from the display.</p>
 <p>To speed things up considerably, data are cached at two levels.
-First, we use the package <em>memoise</em> to cache tiles as they are
+First, we use <code><a href="https://memoise.r-lib.org/reference/memoise.html" class="external-link">memoise::memoise()</a></code> to cache tiles as they are
 fetched from the GeoServer. If there are multiple client browsers under
 the same R session on a Shiny server, this cache is shared among users,
 so the same tile is never fetched from the GeoServer twice by the same R
 session. Second, Leaflet internally caches data drawn by the add*
-functions (here, [leaflet::addPolylines()] and
-[leaflet::addCircleMarkers()]). We track (by user, not session) which
-tiles have been drawn so they don’t need to be redrawn for a user.</p>
+functions (here, <code><a href="https://rdrr.io/pkg/leaflet/man/map-layers.html" class="external-link">leaflet::addPolylines()</a></code> and
+<code><a href="https://rdrr.io/pkg/leaflet/man/map-layers.html" class="external-link">leaflet::addCircleMarkers()</a></code>). We track (by user, not
+session) which tiles have been drawn so they don’t need to be redrawn
+for a user.</p>
 <p>If you want to try running this example, we’ve provided it in one big
 chunk at the bottom, all ready to be copied and pasted into a
 script.</p>
@@ -145,11 +146,12 @@ that seems like a good choice.</p>
 vector data.</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">zoom.levels</span> <span class="op">=</span> <span class="fl">14</span><span class="op">:</span><span class="fl">22</span>    <span class="co"># show vector data at these zoom levels</span></span></code></pre></div>
-<p>Finally, we can use functions from readMVT. [read.XML()] fetches the
-GeoServer’s “capabilities” file, an XML with information on all data on
-the GeoServer. Then, for each feature we will fetch, [layer.info()]
-extracts an MVT object from the XML. Here, we get layer info for stream
-linework and crossing (culverts and bridges) points.</p>
+<p>Finally, we can use functions from readMVT. <code><a href="../reference/read.XML.html">read.XML()</a></code>
+fetches the GeoServer’s “capabilities” file, an XML with information on
+all data on the GeoServer. Then, for each feature we will fetch,
+<code><a href="../reference/layer.info.html">layer.info()</a></code> extracts an MVT object from the XML. Here, we
+get layer info for stream linework and crossing (culverts and bridges)
+points.</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">xml</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/read.XML.html">read.XML</a></span><span class="op">(</span><span class="st">'https://umassdsl.webgis1.com/geoserver'</span><span class="op">)</span>   <span class="co"># get capabilities of our GeoServer</span></span>
 <span><span class="va">streamlines</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/layer.info.html">layer.info</a></span><span class="op">(</span><span class="va">xml</span>, <span class="st">'testbed:streamlines'</span><span class="op">)</span>       <span class="co"># get info for stream linework</span></span>
@@ -159,8 +161,9 @@ linework and crossing (culverts and bridges) points.</p>
 at each zoom level (<em>tiles</em>), and a template URL that specifies
 the tile to fetch, which unresolved information (zoom, row, and column)
 enclosed in braces. In normal use of readMVT, you don’t need to worry
-about these details–you just have to pass the result of [layer.info()]
-to [read.tile()] or [read.viewport.tiles()].</p>
+about these details–you just have to pass the result of
+<code><a href="../reference/layer.info.html">layer.info()</a></code> to <code><a href="../reference/read.tile.html">read.tile()</a></code> or
+<code><a href="../reference/read.viewport.tiles.html">read.viewport.tiles()</a></code>.</p>
 <div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="sc">&gt;</span> streamlines</span>
 <span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="sc">$</span>layer</span>
 <span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>[<span class="dv">1</span>] <span class="st">"testbed_streamlines"</span></span>
@@ -220,10 +223,11 @@ match our vector streams.</p>
 <span>      <span class="fu"><a href="https://rdrr.io/pkg/leaflet/man/addProviderTiles.html" class="external-link">addProviderTiles</a></span><span class="op">(</span><span class="va">providers</span><span class="op">$</span><span class="va">Esri.WorldStreetMap</span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>      <span class="fu"><a href="https://rdrr.io/pkg/leaflet/man/map-methods.html" class="external-link">setView</a></span><span class="op">(</span>lng <span class="op">=</span> <span class="va">home</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span>, lat <span class="op">=</span> <span class="va">home</span><span class="op">[</span><span class="fl">2</span><span class="op">]</span>, zoom <span class="op">=</span> <span class="va">zoom</span><span class="op">)</span></span>
 <span><span class="op">}</span><span class="op">)</span></span></code></pre></div>
-<p>Everything interesting happens inside an [leaflet::observe()]. First,
-we display the zoom level in the left sidebar, and “TRIGGERED!” if the
-zoom level is above the trigger. You should expect to see streams and
-crossings with TRIGGERED is shown.</p>
+<p>Everything interesting happens inside an
+<code>leaflet::observe()</code>. First, we display the zoom level in the
+left sidebar, and “TRIGGERED!” if the zoom level is above the trigger.
+You should expect to see streams and crossings with TRIGGERED is
+shown.</p>
 <div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="fu">observe</span>({</span>
 <span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>   output<span class="sc">$</span>dashboard <span class="ot">&lt;-</span> <span class="fu">renderUI</span>({</span>
 <span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>      output<span class="sc">$</span>dashboard <span class="ot">&lt;-</span> <span class="fu">renderUI</span>({</span>
@@ -234,8 +238,8 @@ crossings with TRIGGERED is shown.</p>
 <p>If we’re zoomed out below the trigger zoom, we’re done–the basemap
 will be displayed, but none of the vector data. If we’re zoomed above
 (or equal to) the trigger, we’ll read the vector tiles and render them.
-We use [leaflet::leafletProxy()] to modify the current display so
-there’s no unnecessary (and ugly) redrawing.</p>
+We use <code><a href="https://rdrr.io/pkg/leaflet/man/leafletProxy.html" class="external-link">leaflet::leafletProxy()</a></code> to modify the current
+display so there’s no unnecessary (and ugly) redrawing.</p>
 <div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span>(<span class="fu">isTRUE</span>(input<span class="sc">$</span>map_zoom <span class="sc">&gt;=</span> trigger)) {   <span class="co"># if above trigger zoom, draw features</span></span>
 <span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>   m <span class="ot">&lt;-</span> <span class="fu">leafletProxy</span>(<span class="st">'map'</span>, session)</span></code></pre></div>
 <p>We get the corner tiles of the current viewport at our fixed tile
@@ -246,11 +250,11 @@ zoom level from Leaflet.</p>
 <p>Now we read all vector tiles for streams in the viewport, omitting
 those we’ve already rendered. Rendering is captured by
 <code>session$userData[[layername]]</code>. Initially, it will be NULL,
-so <code>read.viewport.tiles</code> will initialize it. If you don’t
+so <code><a href="../reference/read.viewport.tiles.html">read.viewport.tiles()</a></code> will initialize it. If you don’t
 want to avoid redrawing, you can omit this argument and the following
 line that saves it. If there are any vector data in the viewport that
-haven’t yet been rendered, <code>addPolylines</code> renders these
-streams.</p>
+haven’t yet been rendered, <code><a href="https://rdrr.io/pkg/leaflet/man/map-layers.html" class="external-link">leaflet::addPolylines</a></code> renders
+these streams.</p>
 <div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">x</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/read.viewport.tiles.html">read.viewport.tiles</a></span><span class="op">(</span><span class="va">streamlines</span>, <span class="va">nw</span>, <span class="va">se</span>, <span class="va">data.zoom</span>, <span class="va">session</span><span class="op">$</span><span class="va">userData</span><span class="op">[[</span><span class="va">streamlines</span><span class="op">$</span><span class="va">layer</span><span class="op">]</span><span class="op">]</span><span class="op">)</span></span>
 <span><span class="va">session</span><span class="op">$</span><span class="va">userData</span><span class="op">[[</span><span class="va">streamlines</span><span class="op">$</span><span class="va">layer</span><span class="op">]</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="va">x</span><span class="op">$</span><span class="va">drawn</span></span>
@@ -263,12 +267,12 @@ into a separate if-clause with a different trigger if we wanted to.</p>
 <span><span class="va">session</span><span class="op">$</span><span class="va">userData</span><span class="op">[[</span><span class="va">culverts</span><span class="op">$</span><span class="va">layer</span><span class="op">]</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="va">x</span><span class="op">$</span><span class="va">drawn</span></span>
 <span><span class="kw">if</span><span class="op">(</span><span class="op">!</span><span class="fu"><a href="https://rdrr.io/r/base/NULL.html" class="external-link">is.null</a></span><span class="op">(</span><span class="va">x</span><span class="op">$</span><span class="va">tiles</span><span class="op">)</span><span class="op">)</span></span>
 <span>   <span class="va">m</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/leaflet/man/map-layers.html" class="external-link">addCircleMarkers</a></span><span class="op">(</span><span class="va">m</span>, data <span class="op">=</span> <span class="va">x</span><span class="op">$</span><span class="va">tiles</span>, group <span class="op">=</span> <span class="st">'vector'</span>, opacity <span class="op">=</span> <span class="fl">1</span>, color <span class="op">=</span> <span class="st">'orange'</span>, radius <span class="op">=</span> <span class="fl">4</span><span class="op">)</span></span></code></pre></div>
-<p>The call to [leaflet::groupOptions()]] displays all
+<p>The call to <code><a href="https://rdrr.io/pkg/leaflet/man/groupOptions.html" class="external-link">leaflet::groupOptions()</a></code> displays all
 previously-rendered vector data at the selected zoom levels. Without
 this, zooming out would show streams and culverts for tiles we’ve
 visited, but not other visible tiles. That would be ugly. By hiding the
 vector data, they smoothly vanish as we zoom out. The Leaflet map is
-returned and rendered as the [shiny::observe()] finishes.</p>
+returned and rendered as the <code>shiny::observe()</code> finishes.</p>
 <div class="sourceCode" id="cb16"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>         <span class="fu">return</span>(<span class="fu">groupOptions</span>(m, <span class="st">'vector'</span>, <span class="at">zoomLevels =</span> zoom.levels))</span>
 <span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>      <span class="er">}</span></span>
 <span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>   <span class="er">})</span></span>
