@@ -125,8 +125,7 @@ packages.</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/bwcompton/readMVT" class="external-link">readMVT</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://shiny.posit.co/" class="external-link">shiny</a></span><span class="op">)</span></span>
-<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://rstudio.github.io/leaflet/" class="external-link">leaflet</a></span><span class="op">)</span></span>
-<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://memoise.r-lib.org" class="external-link">memoise</a></span><span class="op">)</span></span></code></pre></div>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://rstudio.github.io/leaflet/" class="external-link">leaflet</a></span><span class="op">)</span></span></code></pre></div>
 <p>Now we set our home centerpoint and zoom level. The chosen values
 show all of Massachusetts.</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
@@ -146,17 +145,12 @@ that seems like a good choice.</p>
 vector data.</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">zoom.levels</span> <span class="op">=</span> <span class="fl">14</span><span class="op">:</span><span class="fl">22</span>    <span class="co"># show vector data at these zoom levels</span></span></code></pre></div>
-<p>This line sets up the memoise cache for fetched MVTs. You can omit
-this to skip caching, but that seems like a bad idea for any real-world
-application.</p>
-<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">read.tile.C</span> <span class="op">&lt;&lt;-</span> <span class="fu"><a href="https://memoise.r-lib.org/reference/memoise.html" class="external-link">memoise</a></span><span class="op">(</span><span class="va">read.tile</span><span class="op">)</span>  <span class="co"># set up read.tile to cache vector tiles (global to share among users)</span></span></code></pre></div>
 <p>Finally, we can use functions from readMVT. read.XML fetches the
 GeoServer’s “capabilities” file, an XML with information on all data on
 the GeoServer. Then, for each feature we will fetch, layer.info extracts
 an MVT object from the XML. Here, we get layer info for stream linework
 and crossing (culverts and bridges) points.</p>
-<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">xml</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/read.XML.html">read.XML</a></span><span class="op">(</span><span class="st">'https://umassdsl.webgis1.com/geoserver'</span><span class="op">)</span>   <span class="co"># get capabilities of our GeoServer</span></span>
 <span><span class="va">streamlines</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/layer.info.html">layer.info</a></span><span class="op">(</span><span class="va">xml</span>, <span class="st">'testbed:streamlines'</span><span class="op">)</span>       <span class="co"># get info for stream linework</span></span>
 <span><span class="va">culverts</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/layer.info.html">layer.info</a></span><span class="op">(</span><span class="va">xml</span>, <span class="st">'testbed:CL_crossings7'</span><span class="op">)</span>        <span class="co"># get info for crossing points</span></span></code></pre></div>
@@ -167,39 +161,39 @@ the tile to fetch, which unresolved information (zoom, row, and column)
 enclosed in braces. In normal use of readMVT, you don’t need to worry
 about these details–you just have to get the layer.info and pass it to
 read.tile or read.viewport.tiles.</p>
-<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="sc">&gt;</span> streamlines</span>
-<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="sc">$</span>layer</span>
-<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>[<span class="dv">1</span>] <span class="st">"testbed_streamlines"</span></span>
-<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a><span class="sc">$</span>box</span>
-<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>[<span class="dv">1</span>] <span class="sc">-</span><span class="fl">73.58043</span>  <span class="fl">41.22166</span> <span class="sc">-</span><span class="fl">69.89367</span>  <span class="fl">42.95567</span></span>
-<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a><span class="sc">$</span>tiles</span>
-<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a>   zoom    rowmin    rowmax    colmin    colmax</span>
-<span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a><span class="dv">1</span>     <span class="dv">0</span>         <span class="dv">0</span>         <span class="dv">0</span>         <span class="dv">0</span>         <span class="dv">0</span></span>
-<span id="cb8-11"><a href="#cb8-11" aria-hidden="true" tabindex="-1"></a><span class="dv">2</span>     <span class="dv">1</span>         <span class="dv">0</span>         <span class="dv">0</span>         <span class="dv">0</span>         <span class="dv">0</span></span>
-<span id="cb8-12"><a href="#cb8-12" aria-hidden="true" tabindex="-1"></a><span class="dv">3</span>     <span class="dv">2</span>         <span class="dv">1</span>         <span class="dv">1</span>         <span class="dv">1</span>         <span class="dv">1</span></span>
-<span id="cb8-13"><a href="#cb8-13" aria-hidden="true" tabindex="-1"></a><span class="dv">4</span>     <span class="dv">3</span>         <span class="dv">2</span>         <span class="dv">2</span>         <span class="dv">2</span>         <span class="dv">2</span></span>
-<span id="cb8-14"><a href="#cb8-14" aria-hidden="true" tabindex="-1"></a><span class="dv">5</span>     <span class="dv">4</span>         <span class="dv">5</span>         <span class="dv">5</span>         <span class="dv">4</span>         <span class="dv">4</span></span>
-<span id="cb8-15"><a href="#cb8-15" aria-hidden="true" tabindex="-1"></a><span class="dv">6</span>     <span class="dv">5</span>        <span class="dv">11</span>        <span class="dv">11</span>         <span class="dv">9</span>         <span class="dv">9</span></span>
-<span id="cb8-16"><a href="#cb8-16" aria-hidden="true" tabindex="-1"></a><span class="dv">7</span>     <span class="dv">6</span>        <span class="dv">23</span>        <span class="dv">23</span>        <span class="dv">18</span>        <span class="dv">19</span></span>
-<span id="cb8-17"><a href="#cb8-17" aria-hidden="true" tabindex="-1"></a><span class="dv">8</span>     <span class="dv">7</span>        <span class="dv">47</span>        <span class="dv">47</span>        <span class="dv">37</span>        <span class="dv">39</span></span>
-<span id="cb8-18"><a href="#cb8-18" aria-hidden="true" tabindex="-1"></a><span class="dv">9</span>     <span class="dv">8</span>        <span class="dv">94</span>        <span class="dv">95</span>        <span class="dv">75</span>        <span class="dv">78</span></span>
-<span id="cb8-19"><a href="#cb8-19" aria-hidden="true" tabindex="-1"></a><span class="dv">10</span>    <span class="dv">9</span>       <span class="dv">188</span>       <span class="dv">191</span>       <span class="dv">151</span>       <span class="dv">156</span></span>
-<span id="cb8-20"><a href="#cb8-20" aria-hidden="true" tabindex="-1"></a><span class="dv">11</span>   <span class="dv">10</span>       <span class="dv">376</span>       <span class="dv">383</span>       <span class="dv">302</span>       <span class="dv">313</span></span>
-<span id="cb8-21"><a href="#cb8-21" aria-hidden="true" tabindex="-1"></a><span class="dv">12</span>   <span class="dv">11</span>       <span class="dv">752</span>       <span class="dv">766</span>       <span class="dv">605</span>       <span class="dv">626</span></span>
-<span id="cb8-22"><a href="#cb8-22" aria-hidden="true" tabindex="-1"></a>  ...</span>
-<span id="cb8-23"><a href="#cb8-23" aria-hidden="true" tabindex="-1"></a><span class="dv">31</span>   <span class="dv">30</span> <span class="dv">394726401</span> <span class="dv">401696265</span> <span class="dv">317408725</span> <span class="dv">328404932</span></span>
-<span id="cb8-24"><a href="#cb8-24" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-25"><a href="#cb8-25" aria-hidden="true" tabindex="-1"></a><span class="sc">$</span>url</span>
-<span id="cb8-26"><a href="#cb8-26" aria-hidden="true" tabindex="-1"></a>[<span class="dv">1</span>] https<span class="sc">:</span><span class="er">//</span>umassdsl.webgis1.com<span class="sc">/</span>geoserver<span class="sc">/</span>gwc<span class="sc">/</span>service<span class="sc">/</span>wmts<span class="sc">/</span>rest<span class="sc">/</span>testbed<span class="sc">:</span>streamlines<span class="sc">/</span>simple_streams<span class="sc">/</span>EPSG<span class="sc">:</span><span class="dv">900913</span><span class="sc">/</span>EPSG<span class="sc">:</span><span class="dv">900913</span><span class="sc">:</span>{zoom}<span class="sc">/</span>{TileRow}<span class="sc">/</span>{TileCol}?format<span class="ot">=</span>application<span class="sc">/</span>vnd.mapbox<span class="sc">-</span>vector<span class="sc">-</span>tile</span></code></pre></div>
+<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="sc">&gt;</span> streamlines</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="sc">$</span>layer</span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>[<span class="dv">1</span>] <span class="st">"testbed_streamlines"</span></span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a><span class="sc">$</span>box</span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>[<span class="dv">1</span>] <span class="sc">-</span><span class="fl">73.58043</span>  <span class="fl">41.22166</span> <span class="sc">-</span><span class="fl">69.89367</span>  <span class="fl">42.95567</span></span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a><span class="sc">$</span>tiles</span>
+<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a>   zoom    rowmin    rowmax    colmin    colmax</span>
+<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a><span class="dv">1</span>     <span class="dv">0</span>         <span class="dv">0</span>         <span class="dv">0</span>         <span class="dv">0</span>         <span class="dv">0</span></span>
+<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a><span class="dv">2</span>     <span class="dv">1</span>         <span class="dv">0</span>         <span class="dv">0</span>         <span class="dv">0</span>         <span class="dv">0</span></span>
+<span id="cb7-12"><a href="#cb7-12" aria-hidden="true" tabindex="-1"></a><span class="dv">3</span>     <span class="dv">2</span>         <span class="dv">1</span>         <span class="dv">1</span>         <span class="dv">1</span>         <span class="dv">1</span></span>
+<span id="cb7-13"><a href="#cb7-13" aria-hidden="true" tabindex="-1"></a><span class="dv">4</span>     <span class="dv">3</span>         <span class="dv">2</span>         <span class="dv">2</span>         <span class="dv">2</span>         <span class="dv">2</span></span>
+<span id="cb7-14"><a href="#cb7-14" aria-hidden="true" tabindex="-1"></a><span class="dv">5</span>     <span class="dv">4</span>         <span class="dv">5</span>         <span class="dv">5</span>         <span class="dv">4</span>         <span class="dv">4</span></span>
+<span id="cb7-15"><a href="#cb7-15" aria-hidden="true" tabindex="-1"></a><span class="dv">6</span>     <span class="dv">5</span>        <span class="dv">11</span>        <span class="dv">11</span>         <span class="dv">9</span>         <span class="dv">9</span></span>
+<span id="cb7-16"><a href="#cb7-16" aria-hidden="true" tabindex="-1"></a><span class="dv">7</span>     <span class="dv">6</span>        <span class="dv">23</span>        <span class="dv">23</span>        <span class="dv">18</span>        <span class="dv">19</span></span>
+<span id="cb7-17"><a href="#cb7-17" aria-hidden="true" tabindex="-1"></a><span class="dv">8</span>     <span class="dv">7</span>        <span class="dv">47</span>        <span class="dv">47</span>        <span class="dv">37</span>        <span class="dv">39</span></span>
+<span id="cb7-18"><a href="#cb7-18" aria-hidden="true" tabindex="-1"></a><span class="dv">9</span>     <span class="dv">8</span>        <span class="dv">94</span>        <span class="dv">95</span>        <span class="dv">75</span>        <span class="dv">78</span></span>
+<span id="cb7-19"><a href="#cb7-19" aria-hidden="true" tabindex="-1"></a><span class="dv">10</span>    <span class="dv">9</span>       <span class="dv">188</span>       <span class="dv">191</span>       <span class="dv">151</span>       <span class="dv">156</span></span>
+<span id="cb7-20"><a href="#cb7-20" aria-hidden="true" tabindex="-1"></a><span class="dv">11</span>   <span class="dv">10</span>       <span class="dv">376</span>       <span class="dv">383</span>       <span class="dv">302</span>       <span class="dv">313</span></span>
+<span id="cb7-21"><a href="#cb7-21" aria-hidden="true" tabindex="-1"></a><span class="dv">12</span>   <span class="dv">11</span>       <span class="dv">752</span>       <span class="dv">766</span>       <span class="dv">605</span>       <span class="dv">626</span></span>
+<span id="cb7-22"><a href="#cb7-22" aria-hidden="true" tabindex="-1"></a>  ...</span>
+<span id="cb7-23"><a href="#cb7-23" aria-hidden="true" tabindex="-1"></a><span class="dv">31</span>   <span class="dv">30</span> <span class="dv">394726401</span> <span class="dv">401696265</span> <span class="dv">317408725</span> <span class="dv">328404932</span></span>
+<span id="cb7-24"><a href="#cb7-24" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-25"><a href="#cb7-25" aria-hidden="true" tabindex="-1"></a><span class="sc">$</span>url</span>
+<span id="cb7-26"><a href="#cb7-26" aria-hidden="true" tabindex="-1"></a>[<span class="dv">1</span>] https<span class="sc">:</span><span class="er">//</span>umassdsl.webgis1.com<span class="sc">/</span>geoserver<span class="sc">/</span>gwc<span class="sc">/</span>service<span class="sc">/</span>wmts<span class="sc">/</span>rest<span class="sc">/</span>testbed<span class="sc">:</span>streamlines<span class="sc">/</span>simple_streams<span class="sc">/</span>EPSG<span class="sc">:</span><span class="dv">900913</span><span class="sc">/</span>EPSG<span class="sc">:</span><span class="dv">900913</span><span class="sc">:</span>{zoom}<span class="sc">/</span>{TileRow}<span class="sc">/</span>{TileCol}?format<span class="ot">=</span>application<span class="sc">/</span>vnd.mapbox<span class="sc">-</span>vector<span class="sc">-</span>tile</span></code></pre></div>
 </div>
 <div class="section level3">
 <h3 id="user-interface">User interface<a class="anchor" aria-label="anchor" href="#user-interface"></a>
 </h3>
 <p>Here’s a simple Shiny user interface. We make a sidebar on the left
 to display the zoom level.</p>
-<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">ui</span> <span class="op">&lt;-</span> <span class="fu">fluidPage</span><span class="op">(</span></span>
 <span>   <span class="fu">fluidRow</span><span class="op">(</span></span>
 <span>      <span class="fu">column</span><span class="op">(</span><span class="fl">2</span>,</span>
@@ -216,11 +210,11 @@ to display the zoom level.</p>
 <h3 id="server">Server<a class="anchor" aria-label="anchor" href="#server"></a>
 </h3>
 <p>Now we’re ready for the guts of the example.</p>
-<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>server <span class="ot">&lt;-</span> <span class="cf">function</span>(input, output, session) {</span></code></pre></div>
+<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>server <span class="ot">&lt;-</span> <span class="cf">function</span>(input, output, session) {</span></code></pre></div>
 <p>We display the Leaflet basemap and set the initial viewport. The ESRI
 World Street Map makes a good basemap for this example, as the streams
 match our vector streams.</p>
-<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">output</span><span class="op">$</span><span class="va">map</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/leaflet/man/map-shiny.html" class="external-link">renderLeaflet</a></span><span class="op">(</span><span class="op">{</span></span>
 <span>   <span class="fu"><a href="https://rdrr.io/pkg/leaflet/man/leaflet.html" class="external-link">leaflet</a></span><span class="op">(</span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>      <span class="fu"><a href="https://rdrr.io/pkg/leaflet/man/addProviderTiles.html" class="external-link">addProviderTiles</a></span><span class="op">(</span><span class="va">providers</span><span class="op">$</span><span class="va">Esri.WorldStreetMap</span><span class="op">)</span> <span class="op">|&gt;</span></span>
@@ -230,23 +224,23 @@ match our vector streams.</p>
 display the zoom level in the left sidebar, and “TRIGGERED!” if the zoom
 level is above the trigger. You should expect to see streams and
 crossings with TRIGGERED is shown.</p>
-<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="fu">observe</span>({</span>
-<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>   output<span class="sc">$</span>dashboard <span class="ot">&lt;-</span> <span class="fu">renderUI</span>({</span>
-<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>      output<span class="sc">$</span>dashboard <span class="ot">&lt;-</span> <span class="fu">renderUI</span>({</span>
-<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>         <span class="fu">tagList</span>(<span class="fu">div</span>(<span class="st">'zoom = '</span>, input<span class="sc">$</span>map_zoom,),</span>
-<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a>                 <span class="fu">div</span>(<span class="fu">strong</span>(<span class="cf">if</span>(<span class="fu">isTRUE</span>(input<span class="sc">$</span>map_zoom <span class="sc">&gt;=</span> trigger)) <span class="st">' TRIGGERED!'</span>)))</span>
-<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a>      })</span>
-<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a>   })</span></code></pre></div>
+<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="fu">observe</span>({</span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>   output<span class="sc">$</span>dashboard <span class="ot">&lt;-</span> <span class="fu">renderUI</span>({</span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>      output<span class="sc">$</span>dashboard <span class="ot">&lt;-</span> <span class="fu">renderUI</span>({</span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>         <span class="fu">tagList</span>(<span class="fu">div</span>(<span class="st">'zoom = '</span>, input<span class="sc">$</span>map_zoom,),</span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>                 <span class="fu">div</span>(<span class="fu">strong</span>(<span class="cf">if</span>(<span class="fu">isTRUE</span>(input<span class="sc">$</span>map_zoom <span class="sc">&gt;=</span> trigger)) <span class="st">' TRIGGERED!'</span>)))</span>
+<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a>      })</span>
+<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a>   })</span></code></pre></div>
 <p>If we’re zoomed out below the trigger zoom, we’re done–the basemap
 will be displayed, but none of the vector data. If we’re zoomed above
 (or equal to) the trigger, we’ll read the vector tiles and render them.
 We use leafletProxy to modify the current display so there’s no
 unnecessary (and ugly) redrawing.</p>
-<div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span>(<span class="fu">isTRUE</span>(input<span class="sc">$</span>map_zoom <span class="sc">&gt;=</span> trigger)) {   <span class="co"># if above trigger zoom, draw features</span></span>
-<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>   m <span class="ot">&lt;-</span> <span class="fu">leafletProxy</span>(<span class="st">'map'</span>, session)</span></code></pre></div>
+<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span>(<span class="fu">isTRUE</span>(input<span class="sc">$</span>map_zoom <span class="sc">&gt;=</span> trigger)) {   <span class="co"># if above trigger zoom, draw features</span></span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>   m <span class="ot">&lt;-</span> <span class="fu">leafletProxy</span>(<span class="st">'map'</span>, session)</span></code></pre></div>
 <p>We get the corner tiles of the current viewport at our fixed tile
 zoom level from Leaflet.</p>
-<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">nw</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/get.tile.html">get.tile</a></span><span class="op">(</span><span class="va">data.zoom</span>, <span class="va">input</span><span class="op">$</span><span class="va">map_bounds</span><span class="op">$</span><span class="va">north</span>, <span class="va">input</span><span class="op">$</span><span class="va">map_bounds</span><span class="op">$</span><span class="va">west</span><span class="op">)</span>   <span class="co"># corners of viewport</span></span>
 <span><span class="va">se</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/get.tile.html">get.tile</a></span><span class="op">(</span><span class="va">data.zoom</span>, <span class="va">input</span><span class="op">$</span><span class="va">map_bounds</span><span class="op">$</span><span class="va">south</span>, <span class="va">input</span><span class="op">$</span><span class="va">map_bounds</span><span class="op">$</span><span class="va">east</span><span class="op">)</span></span></code></pre></div>
 <p>Now we read all vector tiles for streams in the viewport, omitting
@@ -257,14 +251,14 @@ want to avoid redrawing, you can omit this argument and the following
 line that saves it. If there are any vector data in the viewport that
 haven’t yet been rendered, <code>addPolylines</code> renders these
 streams.</p>
-<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">x</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/read.viewport.tiles.html">read.viewport.tiles</a></span><span class="op">(</span><span class="va">streamlines</span>, <span class="va">nw</span>, <span class="va">se</span>, <span class="va">data.zoom</span>, <span class="va">session</span><span class="op">$</span><span class="va">userData</span><span class="op">[[</span><span class="va">streamlines</span><span class="op">$</span><span class="va">layer</span><span class="op">]</span><span class="op">]</span><span class="op">)</span></span>
 <span><span class="va">session</span><span class="op">$</span><span class="va">userData</span><span class="op">[[</span><span class="va">streamlines</span><span class="op">$</span><span class="va">layer</span><span class="op">]</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="va">x</span><span class="op">$</span><span class="va">drawn</span></span>
 <span><span class="kw">if</span><span class="op">(</span><span class="op">!</span><span class="fu"><a href="https://rdrr.io/r/base/NULL.html" class="external-link">is.null</a></span><span class="op">(</span><span class="va">x</span><span class="op">$</span><span class="va">tiles</span><span class="op">)</span><span class="op">)</span></span>
 <span>   <span class="va">m</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/leaflet/man/map-layers.html" class="external-link">addPolylines</a></span><span class="op">(</span><span class="va">m</span>, data <span class="op">=</span> <span class="va">x</span><span class="op">$</span><span class="va">tiles</span>, group <span class="op">=</span> <span class="st">'vector'</span>, opacity <span class="op">=</span> <span class="fl">0.4</span>, color <span class="op">=</span> <span class="st">'cornflowerblue'</span>, weight <span class="op">=</span> <span class="fl">3</span><span class="op">)</span></span></code></pre></div>
 <p>We do the same thing for culverts. Note that we could move culverts
 into a separate if-clause with a different trigger if we wanted to.</p>
-<div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">x</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/read.viewport.tiles.html">read.viewport.tiles</a></span><span class="op">(</span><span class="va">culverts</span>, <span class="va">nw</span>, <span class="va">se</span>, <span class="va">data.zoom</span>, <span class="va">session</span><span class="op">$</span><span class="va">userData</span><span class="op">[[</span><span class="va">culverts</span><span class="op">$</span><span class="va">layer</span><span class="op">]</span><span class="op">]</span><span class="op">)</span></span>
 <span><span class="va">session</span><span class="op">$</span><span class="va">userData</span><span class="op">[[</span><span class="va">culverts</span><span class="op">$</span><span class="va">layer</span><span class="op">]</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="va">x</span><span class="op">$</span><span class="va">drawn</span></span>
 <span><span class="kw">if</span><span class="op">(</span><span class="op">!</span><span class="fu"><a href="https://rdrr.io/r/base/NULL.html" class="external-link">is.null</a></span><span class="op">(</span><span class="va">x</span><span class="op">$</span><span class="va">tiles</span><span class="op">)</span><span class="op">)</span></span>
@@ -275,12 +269,12 @@ streams and culverts for tiles we’ve visited, but not other visible
 tiles. That would be ugly. By hiding the vector data, they smoothly
 vanish as we zoom out. The Leaflet map is returned and rendered as the
 observe finishes.</p>
-<div class="sourceCode" id="cb17"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>         <span class="fu">return</span>(<span class="fu">groupOptions</span>(m, <span class="st">'vector'</span>, <span class="at">zoomLevels =</span> zoom.levels))</span>
-<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>      <span class="er">}</span></span>
-<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a>   <span class="er">})</span></span>
-<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a><span class="er">}</span></span>
-<span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb17-6"><a href="#cb17-6" aria-hidden="true" tabindex="-1"></a><span class="fu">shinyApp</span>(ui, server)</span></code></pre></div>
+<div class="sourceCode" id="cb16"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>         <span class="fu">return</span>(<span class="fu">groupOptions</span>(m, <span class="st">'vector'</span>, <span class="at">zoomLevels =</span> zoom.levels))</span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>      <span class="er">}</span></span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>   <span class="er">})</span></span>
+<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a><span class="er">}</span></span>
+<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-6"><a href="#cb16-6" aria-hidden="true" tabindex="-1"></a><span class="fu">shinyApp</span>(ui, server)</span></code></pre></div>
 </div>
 </div>
 <div class="section level2">
@@ -289,11 +283,10 @@ observe finishes.</p>
 <p>If you’re using RStudio, you should be able to install the named
 packages, copy this code, paste it into a script window, save it, and
 click “Run App.”</p>
-<div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/bwcompton/readMVT" class="external-link">readMVT</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://shiny.posit.co/" class="external-link">shiny</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://rstudio.github.io/leaflet/" class="external-link">leaflet</a></span><span class="op">)</span></span>
-<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://memoise.r-lib.org" class="external-link">memoise</a></span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">home</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="op">-</span><span class="fl">71.6995</span>, <span class="fl">42.1349</span><span class="op">)</span>  <span class="co"># center of Massachusetts</span></span>
 <span><span class="va">zoom</span> <span class="op">&lt;-</span> <span class="fl">8</span>                     <span class="co"># starting zoom level (shows all of Massachusetts)</span></span>
@@ -301,9 +294,6 @@ click “Run App.”</p>
 <span><span class="va">data.zoom</span> <span class="op">&lt;-</span> <span class="fl">14</span>               <span class="co"># all MVT tiles are read at this zoom level to simplify caching</span></span>
 <span><span class="va">trigger</span> <span class="op">&lt;-</span> <span class="fl">14</span>                 <span class="co"># show vector data when zoomed in this far or more</span></span>
 <span><span class="va">zoom.levels</span> <span class="op">=</span> <span class="fl">14</span><span class="op">:</span><span class="fl">22</span>           <span class="co"># show vector data at these zoom levels</span></span>
-<span></span>
-<span></span>
-<span><span class="va">read.tile.C</span> <span class="op">&lt;&lt;-</span> <span class="fu"><a href="https://memoise.r-lib.org/reference/memoise.html" class="external-link">memoise</a></span><span class="op">(</span><span class="va">read.tile</span><span class="op">)</span>  <span class="co"># set up read.tile to cache vector tiles (global to share among users)</span></span>
 <span></span>
 <span><span class="va">xml</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/read.XML.html">read.XML</a></span><span class="op">(</span><span class="st">'https://umassdsl.webgis1.com/geoserver'</span><span class="op">)</span>   <span class="co"># get capabilities of our GeoServer</span></span>
 <span><span class="va">streamlines</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/layer.info.html">layer.info</a></span><span class="op">(</span><span class="va">xml</span>, <span class="st">'testbed:streamlines'</span><span class="op">)</span>       <span class="co"># get info for stream linework</span></span>
