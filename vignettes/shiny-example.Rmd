@@ -38,7 +38,6 @@ We start with some setup. First of all, we load the required packages.
 library(readMVT)
 library(shiny)
 library(leaflet)
-library(memoise)
 ```
 
 Now we set our home centerpoint and zoom level. The chosen values show all of Massachusetts.
@@ -64,12 +63,6 @@ This variable tells Leaflet the zoom levels at which to display the vector data.
 
 ```{r zoomlevels}         
 zoom.levels = 14:22    # show vector data at these zoom levels
-```
-
-This line sets up the memoise cache for fetched MVTs. You can omit this to skip caching, but that seems like a bad idea for any real-world application.
-
-```{r memoise}
-read.tile.C <<- memoise(read.tile)  # set up read.tile to cache vector tiles (global to share among users)
 ```
 
 Finally, we can use functions from readMVT. read.XML fetches the GeoServer's "capabilities" file, an XML with information on all data on the GeoServer. Then, for each feature we will fetch, layer.info extracts an MVT object from the XML. Here, we get layer info for stream linework and crossing (culverts and bridges) points.
@@ -210,7 +203,6 @@ If you're using RStudio, you should be able to install the named packages, copy 
 library(readMVT)
 library(shiny)
 library(leaflet)
-library(memoise)
 
 home <- c(-71.6995, 42.1349)  # center of Massachusetts
 zoom <- 8                     # starting zoom level (shows all of Massachusetts)
@@ -218,9 +210,6 @@ zoom <- 8                     # starting zoom level (shows all of Massachusetts)
 data.zoom <- 14               # all MVT tiles are read at this zoom level to simplify caching
 trigger <- 14                 # show vector data when zoomed in this far or more
 zoom.levels = 14:22           # show vector data at these zoom levels
-
-
-read.tile.C <<- memoise(read.tile)  # set up read.tile to cache vector tiles (global to share among users)
 
 xml <- read.XML('https://umassdsl.webgis1.com/geoserver')   # get capabilities of our GeoServer
 streamlines <- layer.info(xml, 'testbed:streamlines')       # get info for stream linework

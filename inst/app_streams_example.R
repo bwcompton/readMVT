@@ -2,14 +2,14 @@
 # Minimal example for readMVT package
 # To install readMVT:
 #    remotes::install_github('bwcompton/readMVT')
-# B. Compton, 29 Jun-10 Jul 2023 (from app_test_further2.R)
+# B. Compton, 29 Jun-13 Jul 2023 (from app_test_further2.R)
 
 
 
 library(shiny)
 library(leaflet)
 library(readMVT)
-library(memoise)
+
 
 home <- c(-71.6995, 42.1349)  # center of Massachusetts
 zoom <- 8                     # starting zoom level (shows all of Massachusetts)
@@ -18,8 +18,6 @@ data.zoom <- 14               # all MVT tiles are read at this zoom level to sim
 trigger <- 14                 # show vector data when zoomed in this far or more
 zoom.levels = 14:22           # show vector data at these zoom levels
 
-
-read.tile.C <<- memoise(read.tile)                          # set up read.tile to cache vector tiles (global to share among users)
 
 xml <- read.XML('https://umassdsl.webgis1.com/geoserver')   # get capabilities of our GeoServer
 streamlines <- layer.info(xml, 'testbed:streamlines')       # get info for stream linework

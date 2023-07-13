@@ -42,8 +42,6 @@
 
 
 
-#   library.protolite()     # hack until bug is fixed
-
    url <- sub('\\{zoom\\}', zoom, info$url)
    url <- sub('\\{TileRow\\}', row, url)
    url <- sub('\\{TileCol\\}', col, url)

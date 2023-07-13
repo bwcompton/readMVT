@@ -2,7 +2,7 @@
 % Please edit documentation in R/get.tile.R
 \name{get.tile}
 \alias{get.tile}
-\title{Gets Mapbox Vector Tile row and column}
+\title{Get Mapbox Vector Tile row and column}
 \usage{
 get.tile(zoom, lat, long)
 }

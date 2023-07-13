@@ -1,4 +1,4 @@
-'read.viewport.tiles' <- function(info, nw, se,
+'read.viewport.tiles' <- function(info, nw, se = nw,
                                   data.zoom = 14, drawn = NULL) {
 
    #' Read all Mapbox Vector Tiles in viewport
@@ -9,7 +9,7 @@
    #'
    #' @param info       a GeoServer MVT info object for target layer, from layer.info
    #' @param nw         northwestern corner tile in viewport, from get.tile
-   #' @param se         southeastern corner tile
+   #' @param se         southeastern corner tile (default: just read the tile at nw)
    #' @param data.zoom  zoom level read data at
    #' @param drawn      from session$userData, bit matrix of tiles we've already drawn
    #'                   or NULL for the first call. Omit this argument if you don't
@@ -29,10 +29,8 @@
    #' This function is intended to be used with Leaflet under Shiny with multiple users, though it
    #' is expected to work fine in other applications that are probably less demanding. As multiple
    #' users under Shiny may share an R session, data fetched by any user may be used by other users
-   #' without re-fetching. This is accomplished by caching with the memoise package. In order to
-   #' enable caching, the calling function must execute
-   #'
-   #'    \code{read.tile.C <<- memoise(read.tile)}
+   #' without re-fetching. This is accomplished by caching with the memoise package, which will be
+   #' initialized in this function if needed.
    #'
    #' The global assignment allows cached tiles to be shared among users. If read.tile.C hasn't
    #' been executed, tile reads will not be cached.
@@ -57,8 +55,9 @@
    #'
    #' @export
    #' @import sf
+   #' @import memoise
    #'
-   # B. Compton, 29 Jun-7 Jul 2023
+   # B. Compton, 29 Jun-13 Jul 2023
 
 
 
@@ -69,8 +68,8 @@
    if(is.null(drawn))                                       # if empty drawn, set it up for initial call
       drawn <- matrix(FALSE, tiles$rowmax - tiles$rowmin + 1, tiles$colmax - tiles$colmin + 1)
 
-   if(!exists('read.tile.C'))                               # if memoise hasn't been set up, don't worry about caching
-      read.tile.C <- read.tile
+   if(!exists('read.tile.C'))                               # if memoise hasn't been set up, do that here
+      read.tile.C <<- memoise(read.tile)                    #    global to share among users
 
    if(!any(c(nw > tiles[c('rowmax', 'colmax')], se < tiles[c('rowmin', 'colmin')]))) {    # if viewport overlaps data,
       nw <- pmax(nw, tiles[c('rowmin', 'colmin')])          # clip viewport to data

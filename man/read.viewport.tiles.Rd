@@ -4,14 +4,14 @@
 \alias{read.viewport.tiles}
 \title{Read all Mapbox Vector Tiles in viewport}
 \usage{
-read.viewport.tiles(info, nw, se, data.zoom = 14, drawn = NULL)
+read.viewport.tiles(info, nw, se = nw, data.zoom = 14, drawn = NULL)
 }
 \arguments{
 \item{info}{a GeoServer MVT info object for target layer, from layer.info}
 
 \item{nw}{northwestern corner tile in viewport, from get.tile}
 
-\item{se}{southeastern corner tile}
+\item{se}{southeastern corner tile (default: just read the tile at nw)}
 
 \item{data.zoom}{zoom level read data at}
 
@@ -38,10 +38,8 @@ Reads all tiles within viewport, merging them into a single sf object.
 This function is intended to be used with Leaflet under Shiny with multiple users, though it
 is expected to work fine in other applications that are probably less demanding. As multiple
 users under Shiny may share an R session, data fetched by any user may be used by other users
-without re-fetching. This is accomplished by caching with the memoise package. In order to
-enable caching, the calling function must execute
-
-   \code{read.tile.C <<- memoise(read.tile)}
+without re-fetching. This is accomplished by caching with the memoise package, which will be
+initialized in this function if needed.
 
 The global assignment allows cached tiles to be shared among users. If read.tile.C hasn't
 been executed, tile reads will not be cached.
