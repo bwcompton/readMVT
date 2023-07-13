@@ -26,7 +26,7 @@ One nice approach to displaying vector data is via [Mapbox Vector Tiles](https:/
 
 This example displays vector stream data and road-stream crossings for Massachusetts, USA. It doesn't display the vector data until the user has zoomed to a specified level, for two reasons. First, there's no value in seeing points representing some 30,000 culverts and bridges when viewing the entire state. And second, loading large tiles at lower zoom levels would be prohibitively slow. When the user reaches the trigger zoom level, streams and crossings are displayed. They are continually loaded as the user zooms and pans above the trigger zoom. When the user zooms below the trigger level, the vector data are dropped from the display.
 
-To speed things up considerably, data are cached at two levels. First, we use the package *memoise* to cache tiles as they are fetched from the GeoServer. If there are multiple client browsers under the same R session on a Shiny server, this cache is shared among users, so the same tile is never fetched from the GeoServer twice by the same R session. Second, Leaflet internally caches data drawn by the add\* functions (here, addPolylines and addCircleMarkers). We track (by user, not session) which tiles have been drawn so they don't need to be redrawn for a user.
+To speed things up considerably, data are cached at two levels. First, we use the package *memoise* to cache tiles as they are fetched from the GeoServer. If there are multiple client browsers under the same R session on a Shiny server, this cache is shared among users, so the same tile is never fetched from the GeoServer twice by the same R session. Second, Leaflet internally caches data drawn by the add\* functions (here, [leaflet::addPolylines()] and [leaflet::addCircleMarkers()]). We track (by user, not session) which tiles have been drawn so they don't need to be redrawn for a user.
 
 If you want to try running this example, we've provided it in one big chunk at the bottom, all ready to be copied and pasted into a script.
 
@@ -65,7 +65,7 @@ This variable tells Leaflet the zoom levels at which to display the vector data.
 zoom.levels = 14:22    # show vector data at these zoom levels
 ```
 
-Finally, we can use functions from readMVT. read.XML fetches the GeoServer's "capabilities" file, an XML with information on all data on the GeoServer. Then, for each feature we will fetch, layer.info extracts an MVT object from the XML. Here, we get layer info for stream linework and crossing (culverts and bridges) points.
+Finally, we can use functions from readMVT. [read.XML()] fetches the GeoServer's "capabilities" file, an XML with information on all data on the GeoServer. Then, for each feature we will fetch, [layer.info()] extracts an MVT object from the XML. Here, we get layer info for stream linework and crossing (culverts and bridges) points.
 
 ```{r xml}         
 xml <- read.XML('https://umassdsl.webgis1.com/geoserver')   # get capabilities of our GeoServer
@@ -73,7 +73,7 @@ streamlines <- layer.info(xml, 'testbed:streamlines')       # get info for strea
 culverts <- layer.info(xml, 'testbed:CL_crossings7')        # get info for crossing points
 ```
 
-Here's the MVT object for streamlines. It includes the layer name (*layer*), the bounding box (*box*), the tile boundaries at each zoom level (*tiles*), and a template URL that specifies the tile to fetch, which unresolved information (zoom, row, and column) enclosed in braces. In normal use of readMVT, you don't need to worry about these details--you just have to get the layer.info and pass it to read.tile or read.viewport.tiles.
+Here's the MVT object for streamlines. It includes the layer name (*layer*), the bounding box (*box*), the tile boundaries at each zoom level (*tiles*), and a template URL that specifies the tile to fetch, which unresolved information (zoom, row, and column) enclosed in braces. In normal use of readMVT, you don't need to worry about these details--you just have to pass the result of [layer.info()] to [read.tile()] or [read.viewport.tiles()].
 
 ```{r streamlines}
 > streamlines
@@ -140,7 +140,7 @@ output$map <- renderLeaflet({
 })
 ```
 
-Everything interesting happens inside an *observe*. First, we display the zoom level in the left sidebar, and "TRIGGERED!" if the zoom level is above the trigger. You should expect to see streams and crossings with TRIGGERED is shown.
+Everything interesting happens inside an [leaflet::observe()]. First, we display the zoom level in the left sidebar, and "TRIGGERED!" if the zoom level is above the trigger. You should expect to see streams and crossings with TRIGGERED is shown.
 
 ```{r observe}    
 observe({
@@ -152,7 +152,7 @@ observe({
    })
 ```
 
-If we're zoomed out below the trigger zoom, we're done--the basemap will be displayed, but none of the vector data. If we're zoomed above (or equal to) the trigger, we'll read the vector tiles and render them. We use leafletProxy to modify the current display so there's no unnecessary (and ugly) redrawing.
+If we're zoomed out below the trigger zoom, we're done--the basemap will be displayed, but none of the vector data. If we're zoomed above (or equal to) the trigger, we'll read the vector tiles and render them. We use [leaflet::leafletProxy()] to modify the current display so there's no unnecessary (and ugly) redrawing.
 
 ```{r if}
 if(isTRUE(input$map_zoom >= trigger)) {   # if above trigger zoom, draw features
@@ -184,7 +184,7 @@ if(!is.null(x$tiles))
    m <- addCircleMarkers(m, data = x$tiles, group = 'vector', opacity = 1, color = 'orange', radius = 4)
 ```
 
-The call to groupOptions displays all previously-rendered vector data at the selected zoom levels. Without this, zooming out would show streams and culverts for tiles we've visited, but not other visible tiles. That would be ugly. By hiding the vector data, they smoothly vanish as we zoom out. The Leaflet map is returned and rendered as the observe finishes.
+The call to [leaflet::groupOptions()]] displays all previously-rendered vector data at the selected zoom levels. Without this, zooming out would show streams and culverts for tiles we've visited, but not other visible tiles. That would be ugly. By hiding the vector data, they smoothly vanish as we zoom out. The Leaflet map is returned and rendered as the [shiny::observe()] finishes.
 
 ```{r finish}         
          return(groupOptions(m, 'vector', zoomLevels = zoom.levels))
