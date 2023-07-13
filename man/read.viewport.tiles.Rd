@@ -38,16 +38,13 @@ Reads all tiles within viewport, merging them into a single sf object.
 This function is intended to be used with Leaflet under Shiny with multiple users, though it
 is expected to work fine in other applications that are probably less demanding. As multiple
 users under Shiny may share an R session, data fetched by any user may be used by other users
-without re-fetching. This is accomplished by caching with the memoise package, which will be
+without re-fetching. This is accomplished by caching with [memoise::memoise()], which will be
 initialized in this function if needed.
-
-The global assignment allows cached tiles to be shared among users. If read.tile.C hasn't
-been executed, tile reads will not be cached.
 
 Additionally, Leaflet internally caches data that have already been drawn, so it is
 undesirable for this function to return tiles that have already been drawn when using with
 Leaflet. Tiles are only read and returned if they haven't been drawn yet for this user.
-This behavior is tracked with the drawn argument. After calling this function, you should
+This behavior is tracked with the drawn argument. After calling [read.viewport.tiles()], you should
 save the drawn result in the Shiny user data like this:
 
    \code{x <- read.viewport.tiles(..., drawn = session$userData[[layername$layer]])}

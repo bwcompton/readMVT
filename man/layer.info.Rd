@@ -7,7 +7,7 @@
 layer.info(xml, layer, crs = "EPSG:900913")
 }
 \arguments{
-\item{xml}{XML from getcapabilities. Use readXML to get this}
+\item{xml}{XML from getcapabilities. Use [readXML()] to get this}
 
 \item{layer}{name of the layer, e.g., testbed:streamlines}
 

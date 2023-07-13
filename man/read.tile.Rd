@@ -7,11 +7,11 @@
 read.tile(info, zoom, row, col)
 }
 \arguments{
-\item{info}{layer info for target layer, from layer.info}
+\item{info}{layer info for target layer, from [layer.info()]}
 
 \item{zoom}{zoom level}
 
-\item{row, col}{tile row and column (from get.tile)}
+\item{row, col}{tile row and column (from [get.tile()])}
 }
 \value{
 sf object

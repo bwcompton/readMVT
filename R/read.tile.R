@@ -5,9 +5,9 @@
    #' Read Mapbox Vector Tile for layer described by info, specified zoom, row, and column
    #' from a GeoServer and return as an sf object.
    #'
-   #' @param info    layer info for target layer, from layer.info
+   #' @param info    layer info for target layer, from [layer.info()]
    #' @param zoom    zoom level
-   #' @param row,col tile row and column (from get.tile)
+   #' @param row,col tile row and column (from [get.tile()])
    #'
    #' @return
    #' sf object
