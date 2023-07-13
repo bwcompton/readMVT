@@ -21,11 +21,11 @@ need to track whether tiles have been drawn}
 }
 \value{
 A two-element list:
-    \enumerate{
-    \item tiles    an sf object with vector data from tiles, or NULL if no new data
-                   are available in viewport
-    \item drawn    updated drawn matrix
-    }
+\enumerate{
+\item tiles    an sf object with vector data from tiles, or NULL if no new data
+are available in viewport
+\item drawn    updated drawn matrix
+}
 }
 \description{
 Reads all Mapbox Vector Tiles that fall within the supplied viewport, merging
@@ -38,17 +38,17 @@ Reads all tiles within viewport, merging them into a single sf object.
 This function is intended to be used with Leaflet under Shiny with multiple users, though it
 is expected to work fine in other applications that are probably less demanding. As multiple
 users under Shiny may share an R session, data fetched by any user may be used by other users
-without re-fetching. This is accomplished by caching with [memoise::memoise()], which will be
+without re-fetching. This is accomplished by caching with \code{\link[memoise:memoise]{memoise::memoise()}}, which will be
 initialized in this function if needed.
 
 Additionally, Leaflet internally caches data that have already been drawn, so it is
 undesirable for this function to return tiles that have already been drawn when using with
 Leaflet. Tiles are only read and returned if they haven't been drawn yet for this user.
-This behavior is tracked with the drawn argument. After calling [read.viewport.tiles()], you should
+This behavior is tracked with the drawn argument. After calling \code{read.viewport.tiles()}, you should
 save the drawn result in the Shiny user data like this:
 
-   \code{x <- read.viewport.tiles(..., drawn = session$userData[[layername$layer]])}
-   \code{session$userData[[layername$layer]] <- x$drawn}
+\code{x <- read.viewport.tiles(..., drawn = session$userData[[layername$layer]])}
+\code{session$userData[[layername$layer]] <- x$drawn}
 
 Note that saving drawn as a local variable will not preserve it across repeated observe
 calls in Shiny, and saving it as a global variable will interfere with other users.
@@ -58,6 +58,6 @@ check for NULL before calling a leaflet drawing function.
 }
 \section{Author}{
 
-Bradley W. Compton <bcompton@umass.edu>
+Bradley W. Compton \href{mailto:bcompton@umass.edu}{bcompton@umass.edu}
 }
 

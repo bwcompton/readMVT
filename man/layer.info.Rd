@@ -7,7 +7,7 @@
 layer.info(xml, layer, crs = "EPSG:900913")
 }
 \arguments{
-\item{xml}{XML from getcapabilities. Use [readXML()] to get this}
+\item{xml}{XML from getcapabilities. Use \code{\link[=readXML]{readXML()}} to get this}
 
 \item{layer}{name of the layer, e.g., testbed:streamlines}
 
@@ -15,13 +15,13 @@ layer.info(xml, layer, crs = "EPSG:900913")
 }
 \value{
 An MVT object, a four element list with:
-   \enumerate{
-   \item layer: name of layer (colon converted to underscore)
-   \item box: bounding box (x-min, y-min, x-max, y-max)
-   \item tiles: n x 5 matrix of zoom level, rowmin, rowmax, colmin, colmax
-   \item url: constructed URL, with {style} and {TileMatrixSet} replaced, and {TileMatrix} replaced with {zoom}
-             leaves {zoom}, {TileRow}, and {TileCol} to be replaced on reads
-   }
+\enumerate{
+\item layer: name of layer (colon converted to underscore)
+\item box: bounding box (x-min, y-min, x-max, y-max)
+\item tiles: n x 5 matrix of zoom level, rowmin, rowmax, colmin, colmax
+\item url: constructed URL, with {style} and {TileMatrixSet} replaced, and {TileMatrix} replaced with {zoom}
+leaves {zoom}, {TileRow}, and {TileCol} to be replaced on reads
+}
 }
 \description{
 Reads all necessary info for reading Mapbox Vector Tiles from a GeoServer.
@@ -33,7 +33,7 @@ known.
 }
 \section{Author}{
 
-Bradley W. Compton <bcompton@umass.edu>
+Bradley W. Compton \href{mailto:bcompton@umass.edu}{bcompton@umass.edu}
 }
 
 \examples{

@@ -35,7 +35,7 @@
    #' Additionally, Leaflet internally caches data that have already been drawn, so it is
    #' undesirable for this function to return tiles that have already been drawn when using with
    #' Leaflet. Tiles are only read and returned if they haven't been drawn yet for this user.
-   #' This behavior is tracked with the drawn argument. After calling [read.viewport.tiles()], you should
+   #' This behavior is tracked with the drawn argument. After calling `read.viewport.tiles()`, you should
    #' save the drawn result in the Shiny user data like this:
    #'
    #'    \code{x <- read.viewport.tiles(..., drawn = session$userData[[layername$layer]])}

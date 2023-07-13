@@ -12,7 +12,8 @@ get.tile(zoom, lat, long)
 \item{lat, long}{latitude and longitude of target point}
 }
 \value{
-rowcol      two element vector with row and column in MVT
+\if{html}{\out{<div class="sourceCode">}}\preformatted{rowcol      two element vector with row and column in MVT
+}\if{html}{\out{</div>}}
 }
 \description{
 Translates latitude and longitude at a given zoom level to row and column of a
@@ -24,7 +25,7 @@ services, such as Open Street Map Slippy Tiles. Tiles numbers are the same for a
 data source, based only on zoom level, latitude, and longitude. This function returns
 the tile row and column.
 Translated from Python and JavaScript, thanks to
-    \url{https://stackoverflow.com/questions/29218920/how-to-find-out-map-tile-coordinates-from-latitude-and-longitude}
+\url{https://stackoverflow.com/questions/29218920/how-to-find-out-map-tile-coordinates-from-latitude-and-longitude}
 }
 \examples{
 require(readMVT)

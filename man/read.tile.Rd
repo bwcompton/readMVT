@@ -7,11 +7,11 @@
 read.tile(info, zoom, row, col)
 }
 \arguments{
-\item{info}{layer info for target layer, from [layer.info()]}
+\item{info}{layer info for target layer, from \code{\link[=layer.info]{layer.info()}}}
 
 \item{zoom}{zoom level}
 
-\item{row, col}{tile row and column (from [get.tile()])}
+\item{row, col}{tile row and column (from \code{\link[=get.tile]{get.tile()}})}
 }
 \value{
 sf object
@@ -28,11 +28,11 @@ from a GeoServer and return the data as an sf object.
 Note that this functions requires protolite >= 2.2.1. If it's not yet up on CRAN,
 you can get it with
 
-   \code{remotes::install_github('jeroen/protolite')}
+\code{remotes::install_github('jeroen/protolite')}
 }
 \section{Author}{
 
-Bradley W. Compton <bcompton@umass.edu>
+Bradley W. Compton \href{mailto:bcompton@umass.edu}{bcompton@umass.edu}
 }
 
 \examples{

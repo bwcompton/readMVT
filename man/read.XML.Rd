@@ -23,7 +23,7 @@ you up to pull the key information about Mapbox Vector tiles using layer.info.
 }
 \section{Author}{
 
-Bradley W. Compton <bcompton@umass.edu>
+Bradley W. Compton \href{mailto:bcompton@umass.edu}{bcompton@umass.edu}
 }
 
 \examples{
