@@ -11,7 +11,7 @@ read.viewport.tiles(info, nw, se = nw, data.zoom = 14, drawn = NULL)
 
 \item{nw}{northwestern corner tile in viewport, from get.tile}
 
-\item{se}{southeastern corner tile (default: just read the tile at nw)}
+\item{se}{southeastern corner tile (default: just read a single tile at nw)}
 
 \item{data.zoom}{zoom level read data at}
 
