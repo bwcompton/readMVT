@@ -9,7 +9,7 @@
    #'
    #' @param info       a GeoServer MVT info object for target layer, from layer.info
    #' @param nw         northwestern corner tile in viewport, from get.tile
-   #' @param se         southeastern corner tile (default: just read the tile at nw)
+   #' @param se         southeastern corner tile (default: just read a single tile at nw)
    #' @param data.zoom  zoom level read data at
    #' @param drawn      from session$userData, bit matrix of tiles we've already drawn
    #'                   or NULL for the first call. Omit this argument if you don't
