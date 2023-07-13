@@ -91,10 +91,8 @@ need to track whether tiles have been drawn</p></dd>
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
     
 
-<p>A two-element list:</p>
-<p></p>
-<ol><li><p>tiles    an sf object with vector data from tiles, or NULL if no new data
-                   are available in viewport</p></li>
+<p>A two-element list:</p><ol><li><p>tiles    an sf object with vector data from tiles, or NULL if no new data
+are available in viewport</p></li>
 <li><p>drawn    updated drawn matrix</p></li>
 </ol></div>
     <div class="section level2">
@@ -103,15 +101,15 @@ need to track whether tiles have been drawn</p></dd>
 <p>This function is intended to be used with Leaflet under Shiny with multiple users, though it
 is expected to work fine in other applications that are probably less demanding. As multiple
 users under Shiny may share an R session, data fetched by any user may be used by other users
-without re-fetching. This is accomplished by caching with [memoise::memoise()], which will be
+without re-fetching. This is accomplished by caching with <code><a href="https://memoise.r-lib.org/reference/memoise.html" class="external-link">memoise::memoise()</a></code>, which will be
 initialized in this function if needed.</p>
 <p>Additionally, Leaflet internally caches data that have already been drawn, so it is
 undesirable for this function to return tiles that have already been drawn when using with
 Leaflet. Tiles are only read and returned if they haven't been drawn yet for this user.
-This behavior is tracked with the drawn argument. After calling [read.viewport.tiles()], you should
+This behavior is tracked with the drawn argument. After calling <code>read.viewport.tiles()</code>, you should
 save the drawn result in the Shiny user data like this:</p>
 <p><code>x &lt;- read.viewport.tiles(..., drawn = session$userData[[layername$layer]])</code>
-   <code>session$userData[[layername$layer]] &lt;- x$drawn</code></p>
+<code>session$userData[[layername$layer]] &lt;- x$drawn</code></p>
 <p>Note that saving drawn as a local variable will not preserve it across repeated observe
 calls in Shiny, and saving it as a global variable will interfere with other users.</p>
 <p>If there are no new data available in the viewport, NULL will be returned. You'll need to
@@ -121,7 +119,7 @@ check for NULL before calling a leaflet drawing function.</p>
     <h2 id="author">Author<a class="anchor" aria-label="anchor" href="#author"></a></h2>
     
 
-<p>Bradley W. Compton &lt;bcompton@umass.edu&gt;</p>
+<p>Bradley W. Compton <a href="mailto:bcompton@umass.edu">bcompton@umass.edu</a></p>
     </div>
 
   </main><aside class="col-md-3"><nav id="toc"><h2>On this page</h2>

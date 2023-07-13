@@ -74,7 +74,9 @@ Mapbox Vector Tile.</p>
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
     
 
-<p>rowcol      two element vector with row and column in MVT</p>
+<p></p><div class="sourceCode"><pre><code><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>rowcol      two element vector with row and column <span class="cf">in</span> MVT</span></code></pre><p></p></div>
+
+
     </div>
     <div class="section level2">
     <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>
@@ -83,12 +85,12 @@ services, such as Open Street Map Slippy Tiles. Tiles numbers are the same for a
 data source, based only on zoom level, latitude, and longitude. This function returns
 the tile row and column.
 Translated from Python and JavaScript, thanks to
-    <a href="https://stackoverflow.com/questions/29218920/how-to-find-out-map-tile-coordinates-from-latitude-and-longitude" class="external-link">https://stackoverflow.com/questions/29218920/how-to-find-out-map-tile-coordinates-from-latitude-and-longitude</a></p>
+<a href="https://stackoverflow.com/questions/29218920/how-to-find-out-map-tile-coordinates-from-latitude-and-longitude" class="external-link">https://stackoverflow.com/questions/29218920/how-to-find-out-map-tile-coordinates-from-latitude-and-longitude</a></p>
     </div>
 
     <div class="section level2">
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">require</a></span><span class="op">(</span><span class="va"><a href="https://github.com/bwcompton/readMVT" class="external-link">readMVT</a></span><span class="op">)</span></span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">require</a></span><span class="op">(</span><span class="va"><a href="https://bwcompton.github.io/readMVT/">readMVT</a></span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="va">xml</span> <span class="op">&lt;-</span> <span class="fu"><a href="read.XML.html">read.XML</a></span><span class="op">(</span><span class="st">'https://umassdsl.webgis1.com/geoserver'</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="va">info</span> <span class="op">&lt;-</span> <span class="fu"><a href="layer.info.html">layer.info</a></span><span class="op">(</span><span class="va">xml</span>, <span class="st">'testbed:streamlines'</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="va">rc</span> <span class="op">&lt;-</span> <span class="fu">get.tile</span><span class="op">(</span><span class="fl">10</span>, <span class="fl">48.0096</span>, <span class="op">-</span><span class="fl">88.7712</span><span class="op">)</span></span></span>
