@@ -20,6 +20,7 @@ RoxygenNote: 7.2.3
 Imports:
 	httr,
 	xml2,
+	memoise,
 	protolite (>= 2.2.1),
 	sf
 Remotes:
