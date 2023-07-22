@@ -1,10 +1,10 @@
-### readMVT: Read Mapbox Vector Tiles in R
+## Read Mapbox Vector Tiles in R
 
 <!-- badges: start -->
 [![R-CMD-check](https://github.com/bwcompton/readMVT/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/bwcompton/readMVT/actions/workflows/R-CMD-check.yaml)
 <!-- badges: end -->
 
-This package supports reading vector data (points, lines, polygons) served as [Mapbox Vector Tiles](https://docs.mapbox.com/data/tilesets/guides/vector-tiles-introduction/) (MVT) by a 
+The readMVT package supports reading vector data (points, lines, polygons) served as [Mapbox Vector Tiles](https://docs.mapbox.com/data/tilesets/guides/vector-tiles-introduction/) (MVT) by a 
 [GeoServer](https://geoserver.org/). It is designed to work with Leaflet under Shiny, but should
 work fine in simpler situations. Vector data are returned as sf objects, so it's possible to 
 process vector data in R and return attributes as popups within Leaflet.
