@@ -1,4 +1,5 @@
-## readMVTL: R functions to read Mapbox Vector Tiles
+# readMVTL
+## R functions to read Mapbox Vector Tiles
 
 <!-- badges: start -->
 [![R-CMD-check](https://github.com/bwcompton/readMVT/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/bwcompton/readMVT/actions/workflows/R-CMD-check.yaml)
