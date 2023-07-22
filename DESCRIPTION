@@ -1,6 +1,6 @@
 Package: readMVT
 Type: Package
-Title: Read MapBox Vector Tiles from a GeoServer
+Title: Read MapBox Vector Tiles From a GeoServer
 Version: 0.1.0
 Author: Bradley W. Compton
 Maintainer: Bradley W. Compton <bcompton@umass.edu>
@@ -14,7 +14,7 @@ Description: Read tiled vector data in Mapbox Vector Tiles (MVT) from a
 	that follow zooming and panning.
 URL: https://bwcompton.github.io/readMVT/, https://github.com/bwcompton/readMVT
 BugReports: https://github.com/bwcompton/readMVT/issues
-License: GPL-3
+License: GPL (>= 3)
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.2.3
