@@ -33,7 +33,7 @@
    #' require(readMVT)
    #' require(leaflet)
    #' xml <- read.XML('https://umassdsl.webgis1.com/geoserver')
-   #' info <- layer.info(xml, 'testbed:streamlines')
+   #' info <- layer.info(xml, 'DEPMEP:streams')
    #' rc <- get.tile(12, 42.394, -72.5312)
    #' x <- read.tile(info, 12, rc[1], rc[2])
    #' leaflet(x) |> addTiles() |> addPolylines(data = x)

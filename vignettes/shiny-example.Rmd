@@ -69,7 +69,7 @@ Finally, we can use functions from readMVT. `read.XML()` fetches the GeoServer's
 
 ```{r xml}         
 xml <- read.XML('https://umassdsl.webgis1.com/geoserver')   # get capabilities of our GeoServer
-streamlines <- layer.info(xml, 'testbed:streamlines')       # get info for stream linework
+streamlines <- layer.info(xml, 'DEPMEP:streams')       # get info for stream linework
 culverts <- layer.info(xml, 'testbed:CL_crossings7')        # get info for crossing points
 ```
 
@@ -101,7 +101,7 @@ $tiles
 31   30 394726401 401696265 317408725 328404932
 
 $url
-[1] https://umassdsl.webgis1.com/geoserver/gwc/service/wmts/rest/testbed:streamlines/simple_streams/EPSG:900913/EPSG:900913:{zoom}/{TileRow}/{TileCol}?format=application/vnd.mapbox-vector-tile
+[1] https://umassdsl.webgis1.com/geoserver/gwc/service/wmts/rest/DEPMEP:streams/simple_streams/EPSG:900913/EPSG:900913:{zoom}/{TileRow}/{TileCol}?format=application/vnd.mapbox-vector-tile
 ```
 
 ### User interface
@@ -212,7 +212,7 @@ trigger <- 14                 # show vector data when zoomed in this far or more
 zoom.levels = 14:22           # show vector data at these zoom levels
 
 xml <- read.XML('https://umassdsl.webgis1.com/geoserver')   # get capabilities of our GeoServer
-streamlines <- layer.info(xml, 'testbed:streamlines')       # get info for stream linework
+streamlines <- layer.info(xml, 'DEPMEP:streams')       # get info for stream linework
 culverts <- layer.info(xml, 'testbed:CL_crossings7')        # get info for crossing points
 
 

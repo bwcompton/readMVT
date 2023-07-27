@@ -5,7 +5,7 @@
    #' Reads all necessary info for reading Mapbox Vector Tiles from a GeoServer.
    #'
    #' @param xml     XML from getcapabilities. Use [read.XML()] to get this
-   #' @param layer   name of the layer, e.g., testbed:streamlines
+   #' @param layer   name of the layer, e.g., DEPMEP:streams
    #' @param crs     coordinate reference system. For Mapbox Vector Tiles, you'll want EPSG:900913 (= EPSG:3857)
    #'
    #' @return
@@ -32,7 +32,7 @@
    #' @examples
    #' require(readMVT)
    #' xml <- read.XML('https://umassdsl.webgis1.com/geoserver')
-   #' info <- layer.info(xml, 'testbed:streamlines')
+   #' info <- layer.info(xml, 'DEPMEP:streams')
    #'
    # B. Compton, 12-14 and 29 Jun 2023
 
