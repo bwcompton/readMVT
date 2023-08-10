@@ -9,7 +9,7 @@ layer.info(xml, layer, crs = "EPSG:900913")
 \arguments{
 \item{xml}{XML from getcapabilities. Use \code{\link[=read.XML]{read.XML()}} to get this}
 
-\item{layer}{name of the layer, e.g., testbed:streamlines}
+\item{layer}{name of the layer, e.g., DEPMEP:streams}
 
 \item{crs}{coordinate reference system. For Mapbox Vector Tiles, you'll want EPSG:900913 (= EPSG:3857)}
 }
@@ -39,6 +39,6 @@ Bradley W. Compton \href{mailto:bcompton@umass.edu}{bcompton@umass.edu}
 \examples{
 require(readMVT)
 xml <- read.XML('https://umassdsl.webgis1.com/geoserver')
-info <- layer.info(xml, 'testbed:streamlines')
+info <- layer.info(xml, 'DEPMEP:streams')
 
 }
