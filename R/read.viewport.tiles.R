@@ -55,10 +55,11 @@
    #' @import memoise
    #'
    # B. Compton, 29 Jun-13 Jul 2023
+   # 10 Aug 2023: 2x speedup of rbind by pulling out of loop
 
 
 
-   z <- NULL
+   zl <- list()
 
    tiles <- info$tiles[info$tiles$zoom == data.zoom,]       # full tile range of data
 
@@ -72,15 +73,17 @@
       nw <- pmax(nw, tiles[c('rowmin', 'colmin')])          # clip viewport to data
       se <- pmin(se, tiles[c('rowmax', 'colmax')])
 
+      k <- 0
       for(i in nw[1]:se[1])                                 # for each tile,
          for(j in nw[2]:se[2]) {
 
             if(!drawn[i - tiles$rowmin + 1, j - tiles$colmin + 1]) {
                drawn[i - tiles$rowmin + 1, j - tiles$colmin + 1] <- TRUE
                x <- read.tile.C(info, data.zoom, i, j)
-               if(is.null(z)) z <- x else z <- rbind(z, x)
+               zl[[k <- k + 1]] <- x
             }
          }
    }
+   z <- do.call('rbind', zl)
    return(list(tiles = z, drawn = drawn))
 }
