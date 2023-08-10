@@ -3,7 +3,7 @@ pkgdown: 2.0.7
 pkgdown_sha: ~
 articles:
   shiny-example: shiny-example.html
-last_built: 2023-07-27T17:36Z
+last_built: 2023-08-10T14:37Z
 urls:
   reference: https://bwcompton.github.io/readMVT/reference
   article: https://bwcompton.github.io/readMVT/articles
