@@ -35,6 +35,7 @@
    #' info <- layer.info(xml, 'DEPMEP:streams')
    #'
    # B. Compton, 12-14 and 29 Jun 2023
+   # 8 Jan 2024: check to make sure layer exists
 
 
 
@@ -44,6 +45,9 @@
    # bounding box
    x <- xml_children((xml_find_first(xml, paste0("//Layer[ows:Identifier = '", layer, "']/ows:WGS84BoundingBox"))))
    box <- unlist(lapply(strsplit(xml_text(x), ' '), as.numeric))
+
+   if(length(xml_find_all(xml, paste0('//Layer[ows:Identifier = \'', layer, '\']'))) == 0)
+      stop('Error in readMVT: layer ', layer, ' is missing')
 
    # get rows and cols for each zoom level
    x <- xml_find_all(xml, paste0('//Layer[ows:Identifier = \'', layer, '\']//TileMatrixSetLink[TileMatrixSet = \'', crs, '\']//TileMatrixLimits'))
