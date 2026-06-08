@@ -14,7 +14,7 @@
    #'    \item layer: name of layer (colon converted to underscore)
    #'    \item box: bounding box (x-min, y-min, x-max, y-max)
    #'    \item tiles: n x 5 matrix of zoom level, rowmin, rowmax, colmin, colmax
-   #'    \item url: TMS URL template; leaves {zoom}, {TileRow}, and {TileCol} to be replaced on reads
+   #'    \item url: TMS URL template; leaves `{zoom}`, `{TileRow}`, and `{TileCol}` to be replaced on reads
    #'    }
    #'
    #' @details
@@ -66,7 +66,7 @@
    # GeoServer switched from WMTS REST to TMS for serving MVT tiles
    url <- trimws(noquote(xml_find_first(xml, paste0('concat(//Layer[ows:Identifier = \'', layer, '\']//ResourceURL[@format="application/vnd.mapbox-vector-tile"]/@template, \' \', string(@template))'))))
    base <- sub('/gwc/service/.*', '', url)
-   url <- paste0(base, '/gwc/service/tms/1.0.0/', URLencode(layer, reserved = TRUE), '%40', URLencode(crs, reserved = TRUE), '%40pbf/{zoom}/{TileCol}/{TileRow}.pbf')
+   url <- paste0(base, '/gwc/service/tms/1.0.0/', utils::URLencode(layer, reserved = TRUE), '%40', utils::URLencode(crs, reserved = TRUE), '%40pbf/{zoom}/{TileCol}/{TileRow}.pbf')
 
    return(list(layer = l, box = box, tiles = z, url = url))
 }

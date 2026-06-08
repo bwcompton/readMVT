@@ -19,7 +19,7 @@ An MVT object, a four element list with:
 \item layer: name of layer (colon converted to underscore)
 \item box: bounding box (x-min, y-min, x-max, y-max)
 \item tiles: n x 5 matrix of zoom level, rowmin, rowmax, colmin, colmax
-\item url: TMS URL template; leaves {zoom}, {TileRow}, and {TileCol} to be replaced on reads
+\item url: TMS URL template; leaves \code{{zoom}}, \code{{TileRow}}, and \code{{TileCol}} to be replaced on reads
 }
 }
 \description{
