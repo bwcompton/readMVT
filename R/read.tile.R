@@ -42,8 +42,9 @@
 
 
 
+   tms_row <- (2^zoom - 1) - row        # TMS y=0 is at south; WMTS row=0 is at north
    url <- sub('\\{zoom\\}', zoom, info$url)
-   url <- sub('\\{TileRow\\}', row, url)
+   url <- sub('\\{TileRow\\}', tms_row, url)
    url <- sub('\\{TileCol\\}', col, url)
 
    z <- read_mvt_sf(url, zxy = c(zoom, col, row))
