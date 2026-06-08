@@ -1,0 +1,353 @@
+# shiny-example
+
+## Using readMVT in Leaflet under Shiny
+
+### Introduction
+
+Although Leaflet for R can display very large image or raster data
+seamlessly with little effort it is far more limited in displaying
+vector data. The built-in methods require that your datasets be small
+enough to fit in the client’s browser memory, and datasets of more than
+a very few thousand points are prohibitively slow to load.
+
+One nice approach to displaying vector data is via [Mapbox Vector
+Tiles](https://docs.mapbox.com/data/tilesets/guides/vector-tiles-introduction/)
+(MVT) served by a [GeoServer](https://geoserver.org/). Tiling is done
+transparently on the GeoServer, so data prep doesn’t require a lot of
+effort. The readMVT package facilitates fetching and displaying MVTs in
+Leaflet. It is intended to be run under Shiny, but can be used in
+simpler situations too.
+
+This example displays vector stream data and road-stream crossings for
+Massachusetts, USA. It doesn’t display the vector data until the user
+has zoomed to a specified level, for two reasons. First, there’s no
+value in seeing points representing some 30,000 culverts and bridges
+when viewing the entire state. And second, loading large tiles at lower
+zoom levels would be prohibitively slow. When the user reaches the
+trigger zoom level, streams and crossings are displayed. They are
+continually loaded as the user zooms and pans above the trigger zoom.
+When the user zooms below the trigger level, the vector data are dropped
+from the display.
+
+To speed things up considerably, data are cached at two levels. First,
+we use
+[`memoise::memoise()`](https://memoise.r-lib.org/reference/memoise.html)
+to cache tiles as they are fetched from the GeoServer. If there are
+multiple client browsers under the same R session on a Shiny server,
+this cache is shared among users, so the same tile is never fetched from
+the GeoServer twice by the same R session. Second, Leaflet internally
+caches data drawn by the add\* functions (here,
+[`leaflet::addPolylines()`](https://rstudio.github.io/leaflet/reference/map-layers.html)
+and
+[`leaflet::addCircleMarkers()`](https://rstudio.github.io/leaflet/reference/map-layers.html)).
+We track (by user, not session) which tiles have been drawn so they
+don’t need to be redrawn for a user.
+
+If you want to try running this example, we’ve provided it in one big
+chunk at the bottom, all ready to be copied and pasted into a script.
+
+### Setup
+
+We start with some setup. First of all, we load the required packages.
+
+``` r
+
+library(readMVT)
+library(shiny)
+library(leaflet)
+```
+
+Now we set our home centerpoint and zoom level. The chosen values show
+all of Massachusetts.
+
+``` r
+
+home <- c(-71.6995, 42.1349)  # center of Massachusetts
+zoom <- 8                     # starting zoom level (shows all of Massachusetts)
+```
+
+The next three variables have to do with zoom levels. MVTs are
+simplified at lower zoom levels. As we’ve chosen not to display vector
+data at lower zooms, we pick a fixed zoom to simplify caching and reduce
+fetching redundant data. At zoom level 14, data are not simplified, so
+that seems like a good choice.
+
+``` r
+
+data.zoom <- 14   # all MVT tiles are read at this zoom level to simplify caching
+```
+
+Our trigger level is the zoom level to start showing vector data.
+
+``` r
+
+trigger <- 14     # show vector data when zoomed in this far or more
+```
+
+This variable tells Leaflet the zoom levels at which to display the
+vector data.
+
+``` r
+
+zoom.levels = 14:22    # show vector data at these zoom levels
+```
+
+Finally, we can use functions from readMVT.
+[`read.XML()`](https://bwcompton.github.io/readMVT/reference/read.XML.md)
+fetches the GeoServer’s “capabilities” file, an XML with information on
+all data on the GeoServer. Then, for each feature we will fetch,
+[`layer.info()`](https://bwcompton.github.io/readMVT/reference/layer.info.md)
+extracts an MVT object from the XML. Here, we get layer info for stream
+linework and crossing (culverts and bridges) points.
+
+``` r
+
+xml <- read.XML('https://umassdsl.webgis1.com/geoserver')   # get capabilities of our GeoServer
+streamlines <- layer.info(xml, 'DEPMEP:streams')       # get info for stream linework
+culverts <- layer.info(xml, 'testbed:CL_crossings7')        # get info for crossing points
+```
+
+Here’s the MVT object for streamlines. It includes the layer name
+(*layer*), the bounding box (*box*), the tile boundaries at each zoom
+level (*tiles*), and a template URL that specifies the tile to fetch,
+which unresolved information (zoom, row, and column) enclosed in braces.
+In normal use of readMVT, you don’t need to worry about these
+details–you just have to pass the result of
+[`layer.info()`](https://bwcompton.github.io/readMVT/reference/layer.info.md)
+to
+[`read.tile()`](https://bwcompton.github.io/readMVT/reference/read.tile.md)
+or
+[`read.viewport.tiles()`](https://bwcompton.github.io/readMVT/reference/read.viewport.tiles.md).
+
+``` r
+> streamlines
+$layer
+[1] "testbed_streamlines"
+
+$box
+[1] -73.58043  41.22166 -69.89367  42.95567
+
+$tiles
+   zoom    rowmin    rowmax    colmin    colmax
+1     0         0         0         0         0
+2     1         0         0         0         0
+3     2         1         1         1         1
+4     3         2         2         2         2
+5     4         5         5         4         4
+6     5        11        11         9         9
+7     6        23        23        18        19
+8     7        47        47        37        39
+9     8        94        95        75        78
+10    9       188       191       151       156
+11   10       376       383       302       313
+12   11       752       766       605       626
+  ...
+31   30 394726401 401696265 317408725 328404932
+
+$url
+[1] https://umassdsl.webgis1.com/geoserver/gwc/service/wmts/rest/DEPMEP:streams/simple_streams/EPSG:900913/EPSG:900913:{zoom}/{TileRow}/{TileCol}?format=application/vnd.mapbox-vector-tile
+```
+
+### User interface
+
+Here’s a simple Shiny user interface. We make a sidebar on the left to
+display the zoom level.
+
+``` r
+
+ui <- fluidPage(
+   fluidRow(
+      column(2,
+             wellPanel(
+                uiOutput('dashboard')
+             )
+      ),
+      column(10,
+             leafletOutput('map', height = '80vh')
+      ))
+)
+```
+
+### Server
+
+Now we’re ready for the guts of the example.
+
+``` r
+server <- function(input, output, session) {
+```
+
+We display the Leaflet basemap and set the initial viewport. The ESRI
+World Street Map makes a good basemap for this example, as the streams
+match our vector streams.
+
+``` r
+
+output$map <- renderLeaflet({
+   leaflet() |>
+      addProviderTiles(providers$Esri.WorldStreetMap) |>
+      setView(lng = home[1], lat = home[2], zoom = zoom)
+})
+```
+
+Everything interesting happens inside an `leaflet::observe()`. First, we
+display the zoom level in the left sidebar, and “TRIGGERED!” if the zoom
+level is above the trigger. You should expect to see streams and
+crossings with TRIGGERED is shown.
+
+``` r
+observe({
+   output$dashboard <- renderUI({
+      output$dashboard <- renderUI({
+         tagList(div('zoom = ', input$map_zoom,),
+                 div(strong(if(isTRUE(input$map_zoom >= trigger)) ' TRIGGERED!')))
+      })
+   })
+```
+
+If we’re zoomed out below the trigger zoom, we’re done–the basemap will
+be displayed, but none of the vector data. If we’re zoomed above (or
+equal to) the trigger, we’ll read the vector tiles and render them. We
+use
+[`leaflet::leafletProxy()`](https://rstudio.github.io/leaflet/reference/leafletProxy.html)
+to modify the current display so there’s no unnecessary (and ugly)
+redrawing.
+
+``` r
+if(isTRUE(input$map_zoom >= trigger)) {   # if above trigger zoom, draw features
+   m <- leafletProxy('map', session)
+```
+
+We get the corner tiles of the current viewport at our fixed tile zoom
+level from Leaflet.
+
+``` r
+
+nw <- get.tile(data.zoom, input$map_bounds$north, input$map_bounds$west)   # corners of viewport
+se <- get.tile(data.zoom, input$map_bounds$south, input$map_bounds$east)
+```
+
+Now we read all vector tiles for streams in the viewport, omitting those
+we’ve already rendered. Rendering is captured by
+`session$userData[[layername]]`. Initially, it will be NULL, so
+[`read.viewport.tiles()`](https://bwcompton.github.io/readMVT/reference/read.viewport.tiles.md)
+will initialize it. If you don’t want to avoid redrawing, you can omit
+this argument and the following line that saves it. If there are any
+vector data in the viewport that haven’t yet been rendered,
+[`leaflet::addPolylines`](https://rstudio.github.io/leaflet/reference/map-layers.html)
+renders these streams.
+
+``` r
+
+x <- read.viewport.tiles(streamlines, nw, se, data.zoom, session$userData[[streamlines$layer]])
+session$userData[[streamlines$layer]] <- x$drawn
+if(!is.null(x$tiles))
+   m <- addPolylines(m, data = x$tiles, group = 'vector', opacity = 0.4, color = 'cornflowerblue', weight = 3)
+```
+
+We do the same thing for culverts. Note that we could move culverts into
+a separate if-clause with a different trigger if we wanted to.
+
+``` r
+
+x <- read.viewport.tiles(culverts, nw, se, data.zoom, session$userData[[culverts$layer]])
+session$userData[[culverts$layer]] <- x$drawn
+if(!is.null(x$tiles))
+   m <- addCircleMarkers(m, data = x$tiles, group = 'vector', opacity = 1, color = 'orange', radius = 4)
+```
+
+The call to
+[`leaflet::groupOptions()`](https://rstudio.github.io/leaflet/reference/groupOptions.html)
+displays all previously-rendered vector data at the selected zoom
+levels. Without this, zooming out would show streams and culverts for
+tiles we’ve visited, but not other visible tiles. That would be ugly. By
+hiding the vector data, they smoothly vanish as we zoom out. The Leaflet
+map is returned and rendered as the `shiny::observe()` finishes.
+
+``` r
+         return(groupOptions(m, 'vector', zoomLevels = zoom.levels))
+      }
+   })
+}
+
+shinyApp(ui, server)
+```
+
+## Example code, all in one place
+
+If you’re using RStudio, you should be able to install the named
+packages, copy this code, paste it into a script window, save it, and
+click “Run App.”
+
+``` r
+
+library(readMVT)
+library(shiny)
+library(leaflet)
+
+home <- c(-71.6995, 42.1349)  # center of Massachusetts
+zoom <- 8                     # starting zoom level (shows all of Massachusetts)
+
+data.zoom <- 14               # all MVT tiles are read at this zoom level to simplify caching
+trigger <- 14                 # show vector data when zoomed in this far or more
+zoom.levels = 14:22           # show vector data at these zoom levels
+
+xml <- read.XML('https://umassdsl.webgis1.com/geoserver')   # get capabilities of our GeoServer
+streamlines <- layer.info(xml, 'DEPMEP:streams')       # get info for stream linework
+culverts <- layer.info(xml, 'testbed:CL_crossings7')        # get info for crossing points
+
+
+# User interface ---------------------
+ui <- fluidPage(
+   fluidRow(
+      column(2,
+             wellPanel(
+                uiOutput('dashboard')
+             )
+      ),
+      column(10,
+             leafletOutput('map', height = '80vh')
+      ))
+)
+
+
+# Server -----------------------------
+server <- function(input, output, session) {
+
+
+   output$map <- renderLeaflet({
+      leaflet() |>
+         addProviderTiles(providers$Esri.WorldStreetMap) |>
+         setView(lng = home[1], lat = home[2], zoom = zoom)
+   })
+
+   observe({
+      output$dashboard <- renderUI({
+         output$dashboard <- renderUI({
+            tagList(div('zoom = ', input$map_zoom,),
+                    div(strong(if(isTRUE(input$map_zoom >= trigger)) ' TRIGGERED!')))
+         })
+      })
+
+      if(isTRUE(input$map_zoom >= trigger)) {   # if above trigger zoom, draw features
+         m <- leafletProxy('map', session)
+         
+         nw <- get.tile(data.zoom, input$map_bounds$north, input$map_bounds$west)   # corners of viewport
+         se <- get.tile(data.zoom, input$map_bounds$south, input$map_bounds$east)
+
+         x <- read.viewport.tiles(streamlines, nw, se, data.zoom, session$userData[[streamlines$layer]])
+         session$userData[[streamlines$layer]] <- x$drawn
+         if(!is.null(x$tiles))
+            m <- addPolylines(m, data = x$tiles, group = 'vector', opacity = 0.4, color = 'cornflowerblue', weight = 3)
+
+         x <- read.viewport.tiles(culverts, nw, se, data.zoom, session$userData[[culverts$layer]])
+         session$userData[[culverts$layer]] <- x$drawn
+         if(!is.null(x$tiles))
+            m <- addCircleMarkers(m, data = x$tiles, group = 'vector', opacity = 1, color = 'orange', radius = 4)
+
+         return(groupOptions(m, 'vector', zoomLevels = zoom.levels))
+      }
+   })
+}
+
+shinyApp(ui, server)
+```
