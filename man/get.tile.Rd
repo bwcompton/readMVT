@@ -29,7 +29,7 @@ Translated from Python and JavaScript, thanks to
 }
 \examples{
 require(readMVT)
-xml <- read.XML('https://umassdsl.webgis1.com/geoserver')
+xml <- read.XML('https://marsh01.ecs.umass.edu/geoserver')
 info <- layer.info(xml, 'DEPMEP:streams')
 rc <- get.tile(10, 48.0096, -88.7712)
 

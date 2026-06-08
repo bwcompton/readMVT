@@ -41,7 +41,7 @@ qqq<<-x
 
 
 ########## THIS WORKS, READING FROM FIXED URL
-#url <- 'https://umassdsl.webgis1.com/geoserver/gwc/service/wmts/rest/testbed:streamlines/simple_streams/EPSG:900913/EPSG:900913:9/189/153?format=application/vnd.mapbox-vector-tile'
+#url <- 'https://marsh01.ecs.umass.edu/geoserver/gwc/service/wmts/rest/testbed:streamlines/simple_streams/EPSG:900913/EPSG:900913:9/189/153?format=application/vnd.mapbox-vector-tile'
 #x <- read_mvt_sf(url, zxy = c(9, 153, 189))
 #x <- st_as_sf(x$streamlines)
 #leaflet(x) |>

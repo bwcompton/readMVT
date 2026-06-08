@@ -28,6 +28,6 @@ Bradley W. Compton \href{mailto:bcompton@umass.edu}{bcompton@umass.edu}
 
 \examples{
 require(readMVT)
-xml <- read.XML('https://umassdsl.webgis1.com/geoserver')
+xml <- read.XML('https://marsh01.ecs.umass.edu/geoserver')
 
 }

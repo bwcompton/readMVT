@@ -32,7 +32,7 @@
    #' @examples
    #' require(readMVT)
    #' require(leaflet)
-   #' xml <- read.XML('https://umassdsl.webgis1.com/geoserver')
+   #' xml <- read.XML('https://marsh01.ecs.umass.edu/geoserver')
    #' info <- layer.info(xml, 'DEPMEP:streams')
    #' rc <- get.tile(12, 42.394, -72.5312)
    #' x <- read.tile(info, 12, rc[1], rc[2])

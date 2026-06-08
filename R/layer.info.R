@@ -14,8 +14,7 @@
    #'    \item layer: name of layer (colon converted to underscore)
    #'    \item box: bounding box (x-min, y-min, x-max, y-max)
    #'    \item tiles: n x 5 matrix of zoom level, rowmin, rowmax, colmin, colmax
-   #'    \item url: constructed URL, with {style} and {TileMatrixSet} replaced, and {TileMatrix} replaced with {zoom}
-   #'              leaves {zoom}, {TileRow}, and {TileCol} to be replaced on reads
+   #'    \item url: TMS URL template; leaves {zoom}, {TileRow}, and {TileCol} to be replaced on reads
    #'    }
    #'
    #' @details
@@ -31,7 +30,7 @@
    #'
    #' @examples
    #' require(readMVT)
-   #' xml <- read.XML('https://umassdsl.webgis1.com/geoserver')
+   #' xml <- read.XML('https://marsh01.ecs.umass.edu/geoserver')
    #' info <- layer.info(xml, 'DEPMEP:streams')
    #'
    # B. Compton, 12-14 and 29 Jun 2023
@@ -63,16 +62,11 @@
    }
    z[, 1] <- as.numeric(sub(paste0(crs, ':'), '', z[, 1]))
 
-   # Style
-   style <- xml_text(xml_find_first(xml, paste0("//Layer[ows:Identifier = '", layer, "']/Style/ows:Identifier")))
-
-   # url
+   # url - extract base server URL from capabilities XML, then construct TMS endpoint
+   # GeoServer switched from WMTS REST to TMS for serving MVT tiles
    url <- trimws(noquote(xml_find_first(xml, paste0('concat(//Layer[ows:Identifier = \'', layer, '\']//ResourceURL[@format="application/vnd.mapbox-vector-tile"]/@template, \' \', string(@template))'))))
-
-   # clean up url
-   url <- sub('\\{style\\}', style, url)                             # insert style
-   url <- sub('\\{TileMatrixSet\\}', crs, url)                       # insert CRS
-   url <- sub('\\{TileMatrix\\}', paste0(crs, ':{zoom}'), url)       # insert CRS for zoom, leaving {zoom} for later replacement
+   base <- sub('/gwc/service/.*', '', url)
+   url <- paste0(base, '/gwc/service/tms/1.0.0/', layer, '@', crs, '@pbf/{zoom}/{TileCol}/{TileRow}.pbf')
 
    return(list(layer = l, box = box, tiles = z, url = url))
 }

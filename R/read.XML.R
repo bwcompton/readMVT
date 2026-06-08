@@ -23,7 +23,7 @@
    #'
    #' @examples
    #' require(readMVT)
-   #' xml <- read.XML('https://umassdsl.webgis1.com/geoserver')
+   #' xml <- read.XML('https://marsh01.ecs.umass.edu/geoserver')
    #'
    # B. Compton, 12 Jun 2023
 

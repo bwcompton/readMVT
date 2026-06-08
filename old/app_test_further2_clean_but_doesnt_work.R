@@ -32,7 +32,7 @@ help_text <- includeMarkdown('inst/connect_text.md')        # markdown file with
 
 read.tile.C <<- memoise(read.tile)                          # set up read.tile to cache vector tiles (shared among users)
 
-xml <- read.XML('https://umassdsl.webgis1.com/geoserver')   # get capabilties of our GeoServer
+xml <- read.XML('https://marsh01.ecs.umass.edu/geoserver')   # get capabilties of our GeoServer
 streamlines <- layer.info(xml, 'testbed:streamlines')       # get info for stream linework
 culverts <- layer.info(xml, 'testbed:CL_crossings7')        # get info for crossing points
 

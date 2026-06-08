@@ -19,7 +19,7 @@ trigger <- 14                 # show vector data when zoomed in this far or more
 zoom.levels = 14:22           # show vector data at these zoom levels
 
 
-xml <- read.XML('https://umassdsl.webgis1.com/geoserver')   # get capabilities of our GeoServer
+xml <- read.XML('https://marsh01.ecs.umass.edu/geoserver')   # get capabilities of our GeoServer
 streamlines <- layer.info(xml, 'testbed:streamlines')       # get info for stream linework
 culverts <- layer.info(xml, 'testbed:CL_crossings7')        # get info for crossing points
 

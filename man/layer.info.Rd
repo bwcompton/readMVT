@@ -19,8 +19,7 @@ An MVT object, a four element list with:
 \item layer: name of layer (colon converted to underscore)
 \item box: bounding box (x-min, y-min, x-max, y-max)
 \item tiles: n x 5 matrix of zoom level, rowmin, rowmax, colmin, colmax
-\item url: constructed URL, with {style} and {TileMatrixSet} replaced, and {TileMatrix} replaced with {zoom}
-leaves {zoom}, {TileRow}, and {TileCol} to be replaced on reads
+\item url: TMS URL template; leaves {zoom}, {TileRow}, and {TileCol} to be replaced on reads
 }
 }
 \description{
@@ -38,7 +37,7 @@ Bradley W. Compton \href{mailto:bcompton@umass.edu}{bcompton@umass.edu}
 
 \examples{
 require(readMVT)
-xml <- read.XML('https://umassdsl.webgis1.com/geoserver')
+xml <- read.XML('https://marsh01.ecs.umass.edu/geoserver')
 info <- layer.info(xml, 'DEPMEP:streams')
 
 }

@@ -12,7 +12,7 @@ library(readMVT)
 source('r/read.viewport.tiles2.R')
 
 
-xml <- read.XML('https://umassdsl.webgis1.com/geoserver')   # get capabilities of our GeoServer
+xml <- read.XML('https://marsh01.ecs.umass.edu/geoserver')   # get capabilities of our GeoServer
 streamlines <- layer.info(xml, 'testbed:streamlines')       # get info for stream linework
 
 nw <- c(6055, 4880)
