@@ -36,8 +36,8 @@ An MVT object, a four element list with:
 
 3.  tiles: n x 5 matrix of zoom level, rowmin, rowmax, colmin, colmax
 
-4.  url: TMS URL template; leaves zoom, TileRow, and TileCol to be
-    replaced on reads
+4.  url: TMS URL template; leaves `{zoom}`, `{TileRow}`, and `{TileCol}`
+    to be replaced on reads
 
 ## Details
 
