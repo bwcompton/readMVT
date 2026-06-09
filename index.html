@@ -22,7 +22,7 @@
 
     <a class="navbar-brand me-2" href="index.html">readMVT</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.0.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.1.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -58,6 +58,15 @@
 
 <p>The readMVT package supports reading vector data (points, lines, polygons) served as <a href="https://docs.mapbox.com/data/tilesets/guides/vector-tiles-introduction/" class="external-link">Mapbox Vector Tiles</a> (MVT) by a <a href="https://geoserver.org/" class="external-link">GeoServer</a>. It is designed to work with Leaflet under Shiny, but should work fine in simpler situations. Vector data are returned as sf objects, so it’s possible to process vector data in R and return attributes as popups within Leaflet.</p>
 <p>readMVT includes functions to query data sources and capabilities on a GeoServer, to obtain metadata on specific featuress, to translate latitude-longitude to MVT tile rows and columns, to read a tile, and to read all tiles in the current viewport.</p>
+<div class="section level2">
+<h2 id="version-110-update-8-9-june-2026">Version 1.1.0 update (8-9 June 2026):<a class="anchor" aria-label="anchor" href="#version-110-update-8-9-june-2026"></a>
+</h2>
+<ul>
+<li>The previous version used WMTS REST endpoints, which no longer work in recent versions of GeoServer</li>
+<li>This version uses the TMS endpoint instead; tested working on GeoServer 2.28.4</li>
+<li>The gs-vectortiles extension must be installed separately (and version must match GeoServer exactly)</li>
+</ul>
+</div>
 <div class="section level2">
 <h2 id="installation">Installation<a class="anchor" aria-label="anchor" href="#installation"></a>
 </h2>
