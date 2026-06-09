@@ -13,6 +13,13 @@ readMVT includes functions to query data sources and capabilities on
 a GeoServer, to obtain metadata on specific featuress, to translate latitude-longitude to MVT
 tile rows and columns, to read a tile, and to read all tiles in the current viewport.
 
+## Version 1.1.0 update (8-9 June 2026):
+
+- The previous version used WMTS REST endpoints, which no longer work in recent versions of GeoServer
+- This version uses the TMS endpoint instead; tested working on GeoServer 2.28.4
+- The gs-vectortiles extension must be installed separately (and version must match
+  GeoServer exactly)
+
 ## Installation
 
 You can install the development version of readMVT from [GitHub](https://github.com/) with:
