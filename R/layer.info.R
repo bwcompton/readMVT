@@ -1,12 +1,17 @@
-'layer.info' <- function(xml, layer, crs = 'EPSG:900913') {
+'layer.info' <- function(xml, layer, crs = 'EPSG:900913', base.url = NULL) {
 
    #' Read info for a Mapbox Vector Tile layer on a GeoServer
    #'
    #' Reads all necessary info for reading Mapbox Vector Tiles from a GeoServer.
    #'
-   #' @param xml     XML from getcapabilities. Use [read.XML()] to get this
-   #' @param layer   name of the layer, e.g., DEPMEP:streams
-   #' @param crs     coordinate reference system. For Mapbox Vector Tiles, you'll want EPSG:900913 (= EPSG:3857)
+   #' @param xml      XML from getcapabilities. Use [read.XML()] to get this
+   #' @param layer    name of the layer, e.g., DEPMEP:streams
+   #' @param crs      coordinate reference system. For Mapbox Vector Tiles, you'll want EPSG:900913 (= EPSG:3857)
+   #' @param base.url optional override for the server base URL (scheme+host+port+/geoserver).
+   #'                 When NULL (default), the base is extracted from the ResourceURL in the
+   #'                 capabilities XML. Supply the URL passed to read.XML() when the server's
+   #'                 proxy base URL is misconfigured (e.g., missing a non-standard port), so
+   #'                 tile requests use the correct host and port rather than what the XML reports.
    #'
    #' @return
    #' An MVT object, a four element list with:
@@ -63,9 +68,11 @@
    z[, 1] <- as.numeric(sub(paste0(crs, ':'), '', z[, 1]))
 
    # url - extract base server URL from capabilities XML, then construct TMS endpoint
-   # GeoServer switched from WMTS REST to TMS for serving MVT tiles
+   # GeoServer switched from WMTS REST to TMS for serving MVT tiles.
+   # base.url overrides the URL from the XML for servers whose proxy base URL is
+   # misconfigured (e.g., omits a non-standard port like :8443).
    url <- trimws(noquote(xml_find_first(xml, paste0('concat(//Layer[ows:Identifier = \'', layer, '\']//ResourceURL[@format="application/vnd.mapbox-vector-tile"]/@template, \' \', string(@template))'))))
-   base <- sub('/gwc/service/.*', '', url)
+   base <- if(!is.null(base.url)) base.url else sub('/gwc/service/.*', '', url)
    url <- paste0(base, '/gwc/service/tms/1.0.0/', utils::URLencode(layer, reserved = TRUE), '%40', utils::URLencode(crs, reserved = TRUE), '%40pbf/{zoom}/{TileCol}/{TileRow}.pbf')
 
    return(list(layer = l, box = box, tiles = z, url = url))
