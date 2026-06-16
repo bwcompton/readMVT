@@ -42,7 +42,7 @@
 
     <div class="section level2">
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">layer.info</span><span class="op">(</span><span class="va">xml</span>, <span class="va">layer</span>, crs <span class="op">=</span> <span class="st">"EPSG:900913"</span><span class="op">)</span></span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">layer.info</span><span class="op">(</span><span class="va">xml</span>, <span class="va">layer</span>, crs <span class="op">=</span> <span class="st">"EPSG:900913"</span>, base.url <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div class="section level2">
@@ -59,6 +59,14 @@
 
 <dt id="arg-crs">crs<a class="anchor" aria-label="anchor" href="#arg-crs"></a></dt>
 <dd><p>coordinate reference system. For Mapbox Vector Tiles, you'll want EPSG:900913 (= EPSG:3857)</p></dd>
+
+
+<dt id="arg-base-url">base.url<a class="anchor" aria-label="anchor" href="#arg-base-url"></a></dt>
+<dd><p>optional override for the server base URL (scheme+host+port+/geoserver).
+When NULL (default), the base is extracted from the ResourceURL in the
+capabilities XML. Supply the URL passed to read.XML() when the server's
+proxy base URL is misconfigured (e.g., missing a non-standard port), so
+tile requests use the correct host and port rather than what the XML reports.</p></dd>
 
 </dl></div>
     <div class="section level2">
