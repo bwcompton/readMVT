@@ -4,7 +4,7 @@
 \alias{layer.info}
 \title{Read info for a Mapbox Vector Tile layer on a GeoServer}
 \usage{
-layer.info(xml, layer, crs = "EPSG:900913")
+layer.info(xml, layer, crs = "EPSG:900913", base.url = NULL)
 }
 \arguments{
 \item{xml}{XML from getcapabilities. Use \code{\link[=read.XML]{read.XML()}} to get this}
@@ -12,6 +12,12 @@ layer.info(xml, layer, crs = "EPSG:900913")
 \item{layer}{name of the layer, e.g., DEPMEP:streams}
 
 \item{crs}{coordinate reference system. For Mapbox Vector Tiles, you'll want EPSG:900913 (= EPSG:3857)}
+
+\item{base.url}{optional override for the server base URL (scheme+host+port+/geoserver).
+When NULL (default), the base is extracted from the ResourceURL in the
+capabilities XML. Supply the URL passed to read.XML() when the server's
+proxy base URL is misconfigured (e.g., missing a non-standard port), so
+tile requests use the correct host and port rather than what the XML reports.}
 }
 \value{
 An MVT object, a four element list with:
