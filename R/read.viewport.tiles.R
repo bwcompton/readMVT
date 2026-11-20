@@ -56,6 +56,7 @@
    #'
    # B. Compton, 29 Jun-13 Jul 2023
    # 10 Aug 2023: 2x speedup of rbind by pulling out of loop
+   # 20 Nov 2026: fill columns missing from some tiles (MVT drops NULL attributes) so rbind doesn't fail
 
 
 
@@ -84,6 +85,12 @@
             }
          }
    }
+   zl <- zl[!sapply(zl, is.null)]                           # drop empty tiles
+   cols <- unique(unlist(lapply(zl, names)))                # MVT omits NULL attributes, so a tile where a field is all
+   zl <- lapply(zl, function(x) {                           #    NA lacks that column; fill with NA so rbind works
+      for(n in setdiff(cols, names(x))) x[[n]] <- NA
+      x[, cols]
+   })
    z <- do.call('rbind', zl)
    return(list(tiles = z, drawn = drawn))
 }
