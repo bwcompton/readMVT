@@ -13,6 +13,10 @@ GeoServer, to obtain metadata on specific featuress, to translate
 latitude-longitude to MVT tile rows and columns, to read a tile, and to
 read all tiles in the current viewport.
 
+## Version 1.1.1 update (20 Nov 2026):
+
+- Make reads robust to all-NA tiles
+
 ## Version 1.1.0 update (8-9 June 2026):
 
 - The previous version used WMTS REST endpoints, which no longer work in
