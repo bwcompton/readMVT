@@ -64,8 +64,5 @@ Bradley W. Compton <bcompton@umass.edu>
 ``` r
 require(readMVT)
 xml <- read.XML('https://marsh01.ecs.umass.edu/geoserver')
-#> Error in curl::curl_fetch_memory(url, handle = handle): Timeout was reached [marsh01.ecs.umass.edu]:
-#> Operation too slow. Less than 1 bytes/sec transferred the last 600 seconds
 info <- layer.info(xml, 'DEPMEP:streams')
-#> Error: object 'xml' not found
 ```
