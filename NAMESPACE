@@ -9,5 +9,7 @@ import(memoise)
 import(protolite)
 import(sf)
 import(xml2)
-importFrom(httr,GET)
-importFrom(httr,content)
+importFrom(httr,
+  GET,
+  content
+)
